@@ -3,9 +3,15 @@
 namespace DMS.Controllers
 {
     [ApiController]
-    [Route("/")] // Basis-Route (http://localhost:8081/)
+    [Route("/")]
     public class HomeController : ControllerBase
     {
+        
+        
+        /// <summary>
+        /// Default route returning hardcoded data.
+        /// </summary>
+        /// <returns>A JSON object containing a message, timestamp, and status code.</returns>
         [HttpGet]
         public IActionResult GetHardcodedData()
         {
@@ -15,7 +21,6 @@ namespace DMS.Controllers
                 Timestamp = DateTime.UtcNow,
                 Status = 200
             };
-
             return Ok(hardcodedData);
         }
     }
