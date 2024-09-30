@@ -2,10 +2,23 @@
   dms:
     image: dms
     build:
-      context: .
-      dockerfile: DMS/Dockerfile
+      context: ./DMS_REST_API
+      dockerfile: Dockerfile
     ports:
       - "8081:8081"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:8081
+
+
+#  webui:
+#    image: webui
+#    build:
+#        context: .
+#        dockerfile: Dockerfile
+#    ports:
+#        - "8080:8080"
+#    environment:
+#        -   
+
+ 
