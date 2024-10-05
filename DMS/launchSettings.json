@@ -4,7 +4,8 @@
       "commandName": "DockerCompose",
       "commandVersion": "1.0",
       "serviceActions": {
-        "dms_rest_api": "StartDebugging"
+        "dms_rest_api": "StartDebugging",
+        "webui": "StartDebugging"
       }
     }
   }
