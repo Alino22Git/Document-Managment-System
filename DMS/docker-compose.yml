@@ -1,25 +1,23 @@
-version: '3.4'
+version: '3.8' # Aktualisierte Version
 
 services:
   dms_rest_api:
     image: dms_rest_api
     build:
-      context: DMS_REST_API
+      context: ./DMS_REST_API
       dockerfile: Dockerfile
     ports:
-     - "8080:8080"
-     #- "443:443"
+      - "8080:8080"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:8081
+      - ASPNETCORE_URLS=http://+:8080
 
-  nginx:
-    image: nginx:alpine
+  webui:
+    image: dms_webui
+    build:
+      context: ./DMS_WebUI
+      dockerfile: Dockerfile
     ports:
       - "80:80"
-    volumes:
-      - ./DMS_REST_API/nginx.conf:/etc/nginx/nginx.conf
-      - ./DMS_REST_API/index.html:/usr/share/nginx/html/index.html
     depends_on:
       - dms_rest_api
-
