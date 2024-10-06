@@ -1,26 +1,32 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hello World</title>
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="/site.css">
 </head>
 <body>
-    <h1>Hello World!</h1>
-    <p>This is a simple dashboard.</p>
+<div class="container">
+    <h1>Dashboard</h1>
+    <p>Willkommen zu Ihrem einfachen Dashboard.</p>
 
-    <div id="api-response"></div>
+    
+    <table>
+        <thead>
+        <tr>
+            <th>Nachricht</th>
+            <th>Zeitstempel</th>
+            <th>Status</th>
+        </tr>
+        </thead>
+        <tbody id="apiTableBody">
+        <!-- Hier werden die API-Daten eingefügt -->
+        </tbody>
+    </table>
+</div>
 
-    <script>
-        // Fetching a simple Hello World message from the API
-        fetch('/api/')
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('api-response').innerText = JSON.stringify(data, null, 2);
-            })
-            .catch(error => {
-                document.getElementById('api-response').innerText = 'Error: ' + error;
-            });
-    </script>
+
+<script src="./js/site.js"></script>
 </body>
 </html>
