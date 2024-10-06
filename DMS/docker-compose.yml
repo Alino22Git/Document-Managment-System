@@ -1,11 +1,14 @@
-﻿services:
-  dms:
-    image: dms
+version: '3.4'
+
+services:
+  dms_rest_api:
+    image: dms_rest_api
     build:
-      context: .
-      dockerfile: DMS/Dockerfile
+      context: DMS_REST_API
+      dockerfile: Dockerfile
     ports:
-      - "8081:8081"
+     - "8080:8080"
+     #- "443:443"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:8081

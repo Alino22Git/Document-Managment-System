@@ -1,4 +1,4 @@
-namespace DMS
+namespace DMS_REST_API
 {
     public class WeatherForecast
     {
