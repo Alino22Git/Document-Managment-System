@@ -17,7 +17,7 @@ namespace DMS.Controllers
         {
             var hardcodedData = new
             {
-                Message = "This is hardcoded data",
+                Message = "Hello World",
                 Timestamp = DateTime.UtcNow,
                 Status = 200
             };

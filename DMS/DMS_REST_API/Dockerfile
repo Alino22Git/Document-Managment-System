@@ -1,5 +1,3 @@
-#See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
-
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 USER app
 WORKDIR /app
@@ -9,10 +7,17 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["DMS_REST_API/DMS_REST_API.csproj", "DMS_REST_API/"]
-RUN dotnet restore "./DMS_REST_API/DMS_REST_API.csproj"
+
+# Corrected COPY instruction
+COPY ["DMS_REST_API.csproj", "./"]
+
+RUN dotnet restore "./DMS_REST_API.csproj"
+
+# Copy the remaining files
 COPY . .
-WORKDIR "/src/DMS_REST_API"
+
+WORKDIR "/src"
+
 RUN dotnet build "./DMS_REST_API.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
