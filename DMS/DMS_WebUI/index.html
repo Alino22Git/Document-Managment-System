@@ -13,7 +13,7 @@
 
     <script>
         // Fetching a simple Hello World message from the API
-        fetch('/api/weatherforecast')
+        fetch('/api/')
             .then(response => response.json())
             .then(data => {
                 document.getElementById('api-response').innerText = JSON.stringify(data, null, 2);
