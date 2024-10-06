@@ -24,8 +24,9 @@
   <component name="ChangeListManager">
     <list default="true" id="d039b34e-bbb2-4ba7-9af8-85ad4bded8b2" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DMS/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DMS/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DMS_REST_API/Controllers/HomeController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DMS_REST_API/Controllers/HomeController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DMS_WebUI/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/DMS_WebUI/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.DMS/Docker/docker-compose.generated.override.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DMS/Docker/docker-compose.generated.override.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-compose.override.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.override.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,6 +57,7 @@
     ".NET Launch Settings Profile.DMS: IIS Express.executor": "Run",
     ".NET Launch Settings Profile.DMS: http.executor": "Run",
     ".NET Launch Settings Profile.DMS: https.executor": "Run",
+    "Docker.DMS_WebUI/Dockerfile.executor": "Run",
     "Docker.docker-compose.yml: Compose Deployment.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "WebUI-SetUp",

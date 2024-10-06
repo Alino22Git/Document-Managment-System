@@ -1,4 +1,4 @@
-version: '3.8' # Aktualisierte Version
+version: '3.8'
 
 services:
   dms_rest_api:
