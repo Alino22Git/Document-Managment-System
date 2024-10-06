@@ -18,8 +18,8 @@ services:
     ports:
       - "80:80"
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
-      - ./index.html:/usr/share/nginx/html/index.html
+      - ./DMS_REST_API/nginx.conf:/etc/nginx/nginx.conf
+      - ./DMS_REST_API/index.html:/usr/share/nginx/html/index.html
     depends_on:
-      - dms
+      - dms_rest_api
 
