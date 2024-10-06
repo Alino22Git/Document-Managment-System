@@ -1,0 +1,41 @@
+# This is a generated file. Not intended for manual editing.
+services:
+  dms_rest_api:
+    build:
+      context: "C:\\Users\\micha\\RiderProjects\\Document-Managment-System\\DMS\\\
+        DMS_REST_API"
+      dockerfile: "Dockerfile"
+      target: "base"
+    command: []
+    entrypoint:
+    - "dotnet"
+    - "/app/bin/Debug/net8.0/DMS_REST_API.dll"
+    environment:
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+    image: "dms_rest_api:dev"
+    ports: []
+    volumes:
+    - "C:\\Users\\micha\\.nuget\\packages:/home/app/.nuget/packages"
+    - "C:\\Users\\micha\\RiderProjects\\Document-Managment-System\\DMS\\DMS_REST_API:/app:rw"
+    - "C:\\Users\\micha\\RiderProjects\\Document-Managment-System\\DMS:/src:rw"
+    working_dir: "/app"
+  webui:
+    build:
+      context: "C:\\Users\\micha\\RiderProjects\\Document-Managment-System\\DMS\\\
+        DMS_WebUI"
+      dockerfile: "Dockerfile"
+    command: []
+    entrypoint:
+    - "dotnet"
+    - "/app/bin/Debug/net8.0/DMS_WebUI.dll"
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+      ASPNETCORE_STATICWEBASSETS: "/app/bin/Debug/net8.0/DMS_WebUI.staticwebassets.runtime.CT.json"
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+    image: "dms_webui:dev"
+    ports: []
+    volumes:
+    - "C:\\Users\\micha\\.nuget\\packages:/root/.nuget/packages"
+    - "C:\\Users\\micha\\RiderProjects\\Document-Managment-System\\DMS\\DMS_WebUI:/app:rw"
+    - "C:\\Users\\micha\\RiderProjects\\Document-Managment-System\\DMS:/src:rw"
+    working_dir: "/app"
