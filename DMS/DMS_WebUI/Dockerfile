@@ -5,6 +5,6 @@ FROM nginx:alpine
 COPY nginx.conf /etc/nginx/nginx.conf
 
 # Kopiere die statischen Dateien
-COPY index.html /usr/share/nginx/html/index.html
+COPY wwwroot /usr/share/nginx/html
 EXPOSE 80
 
