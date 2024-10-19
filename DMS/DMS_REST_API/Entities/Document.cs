@@ -1,11 +1,15 @@
-﻿namespace DMS_REST_API.Entities
+﻿using System.ComponentModel.DataAnnotations;
+namespace DMS_REST_API.Entities;
+public class Document
 {
-    public class Document
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string FileType { get; set; }
-        public DateTime CreatedAt { get; set; }
-    }
-}
+    public int Id { get; set; }
 
+    [Required]
+    [MaxLength(100)]
+    public string Name { get; set; }
+
+    [Required]
+    public string FileType { get; set; }
+
+    public DateTime CreatedAt { get; set; }
+}
