@@ -3,10 +3,7 @@ const apiUrl = 'api/document';
 
 // Funktion zum Abrufen und Anzeigen der API-Daten in der Tabelle
 function fetchDocuments() {
-    fetch(apiUrl, {
-        method: 'GET'
-    })
-        
+    fetch(apiUrl)
         .then(response => {
             if (!response.ok) {
                 throw new Error(`HTTP-Fehler! Status: ${response.status}`);
@@ -14,24 +11,34 @@ function fetchDocuments() {
             return response.json();
         })
         .then(data => {
-            console.log(data);
-            const tableBody = document.getElementById('Documents');
+            const tableBody = document.getElementById('apiTableBody');
             tableBody.innerHTML = ''; // Tabelle leeren bevor neue Daten eingefügt werden
-            if (Array.isArray(data)) {
-                data.forEach(o => {
-                    const li = o.createElement('li');
-                    li.innerHTML = `
-                    <span>Id: ${o.id} | Title: ${o.title}</span>
-                `;
-                    tableBody.appendChild(li); // Zeile zur Tabelle hinzufügen
-                });
-            }
+
+            data.forEach(item => {
+                // Erstellen einer neuen Tabellenzeile mit den API-Daten
+                const row = document.createElement('tr');
+
+                const idCell = document.createElement('td');
+                idCell.textContent = item.id;
+                row.appendChild(idCell);
+
+                const titleCell = document.createElement('td');
+                titleCell.textContent = item.title;
+                row.appendChild(titleCell);
+
+                const fileTypeCell = document.createElement('td');
+                fileTypeCell.textContent = item.fileType;
+                row.appendChild(fileTypeCell);
+
+                tableBody.appendChild(row);
+            });
         })
         .catch(error => {
             console.error('Fehler beim Abrufen der API-Daten:', error);
             alert('Fehler beim Laden der Daten. Bitte versuchen Sie es später erneut.');
         });
 }
+
 
 function addDocument() {
     const documentTitle = document.getElementById('documentTitle').value;
@@ -48,8 +55,6 @@ function addDocument() {
         Id: 0,
         Title: documentTitle,
         FileType: documentType,
-        CreatedAt: Date.now()
-
     };
 
     fetch(apiUrl, {
@@ -72,7 +77,5 @@ function addDocument() {
         })
         .catch(error => console.error('Fehler:', error));
 }
-
-
 // Daten beim Laden der Seite abrufen
 document.addEventListener('DOMContentLoaded', fetchDocuments);

@@ -11,6 +11,5 @@ namespace DMS_DAL.Entities
 
         [Required]
         public string FileType { get; set; }
-        public DateTime CreatedAt { get; set; }
     }
 }
