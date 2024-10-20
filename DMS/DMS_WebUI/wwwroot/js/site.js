@@ -34,15 +34,22 @@ function fetchDocuments() {
 }
 
 function addDocument() {
-    const taskName = document.getElementById('documentName').value;
+    const documentTitle = document.getElementById('documentTitle').value;
+    const documentType = document.getElementById('documentType').value;
 
-    if (taskName.trim() === '') {
+    if (documentTitle.trim() === '') {
         alert('Please enter a task name');
         return;
     }
 
-    const newTask = {
-        Title: taskName,
+
+
+    const newDoc = {
+        Id: 0,
+        Title: documentTitle,
+        FileType: documentType,
+        CreatedAt: Date.now()
+
     };
 
     fetch(apiUrl, {
@@ -50,12 +57,13 @@ function addDocument() {
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(newTask)
+        body: JSON.stringify(newDoc)
     })
         .then(response => {
             if (response.ok) {
                 fetchDocuments(); // Refresh the list after adding
-                document.getElementById('documentName').value = ''; // Clear the input field
+                document.getElementById('documentTitle').value = '';
+                document.getElementById('documentType').value = '';// Clear the input field
             } else {
                 // Neues Handling für den Fall eines Fehlers (z.B. leeres Namensfeld)
                 response.json().then(err => alert("Fehler: " + err.message));

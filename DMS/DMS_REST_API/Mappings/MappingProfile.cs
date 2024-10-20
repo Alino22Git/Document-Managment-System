@@ -14,11 +14,20 @@ namespace DMS_REST_API.Mappings
                     => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.Title, opt
                     => opt.MapFrom(src => $"{src.Title} mapped"))
+                .ForMember(dest => dest.FileType, opt
+                    => opt.MapFrom(src => src.FileType))
+                .ForMember(dest => dest.CreatedAt, opt
+                    => opt.MapFrom(src => src.CreatedAt))
+
                 .ReverseMap()
                 .ForMember(dest => dest.Id, opt
                     => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.Title, opt
                     => opt.MapFrom(src => (src.Title ?? string.Empty).Replace(" mapped", "")))
+                .ForMember(dest => dest.FileType, opt
+                    => opt.MapFrom(src => src.FileType))
+                .ForMember(dest => dest.CreatedAt, opt
+                    => opt.MapFrom(src => src.CreatedAt))
                 ;
         }
     }
