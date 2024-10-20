@@ -9,20 +9,20 @@ ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 
 
-COPY ["DMS_DAL.csproj", "./"]
+COPY ["./DMS_DAL/DMS_DAL.csproj", "./DMS_DAL/"]
 
-RUN dotnet restore "./DMS_DAL.csproj"
+RUN dotnet restore "./DMS_DAL/DMS_DAL.csproj"
 
 
 COPY . .
 
 WORKDIR "/src"
 
-RUN dotnet build "./DMS_DAL.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet build "./DMS_DAL/DMS_DAL.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./DMS_DAL.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./DMS_DAL/DMS_DAL.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app

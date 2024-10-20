@@ -9,20 +9,20 @@ ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 
 # Corrected COPY instruction
-COPY ["DMS_REST_API.csproj", "./"]
+COPY ["./DMS_REST_API/DMS_REST_API.csproj", "./DMS_REST_API/"]
 
-RUN dotnet restore "./DMS_REST_API.csproj"
+RUN dotnet restore "./DMS_REST_API/DMS_REST_API.csproj"
 
 # Copy the remaining files
 COPY . .
 
 WORKDIR "/src"
 
-RUN dotnet build "./DMS_REST_API.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet build "./DMS_REST_API/DMS_REST_API.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./DMS_REST_API.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./DMS_REST_API/DMS_REST_API.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app

@@ -4,8 +4,8 @@ services:
   dms_rest_api:
     image: dms_rest_api
     build:
-      context: ./DMS_REST_API
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: /DMS_REST_API/Dockerfile
     ports:
       - "8080:8080"
     environment:
@@ -42,8 +42,8 @@ services:
   dms_dal:
     image: dms_dal
     build:
-      context: ./DMS_DAL
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./DMS_DAL/Dockerfile
     ports:
       - "8081:8081"
     environment:
