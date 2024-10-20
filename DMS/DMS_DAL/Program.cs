@@ -6,13 +6,13 @@ using System.Net.WebSockets;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+
 
 builder.Services.AddControllers();
 builder.Services.AddDbContext<DMS_Context>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DMS_Database"))
 );
-
+builder.Services.AddScoped<IDocumentRepository, DocumentRepository>();
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())

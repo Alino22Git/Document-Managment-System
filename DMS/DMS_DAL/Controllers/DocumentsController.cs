@@ -4,28 +4,27 @@ using DMS_DAL.Entities;
 
 namespace DMS_DAL.Controllers
 {
-    public class DocumentsController
+    
+    [ApiController]
+    [Route("api/[controller]")]
+    public class DocumentsController(IDocumentRepository repository) : ControllerBase
     {
-        [ApiController]
-        [Route("api/[controller]")]
-        public class TodoController(IDocumentRepository repository) : ControllerBase
+        [HttpGet]
+        public async Task<IEnumerable<Document>> GetAsync()
         {
-            [HttpGet]
-            public async Task<IEnumerable<Document>> GetAsync()
-            {
-                return await repository.GetAllDocumentsAsync();
-            }
+            return await repository.GetAllDocumentsAsync();
+        }
 
-            [HttpPost]
-            public async Task<IActionResult> PostAsync(Document item)
+        [HttpPost]
+        public async Task<IActionResult> PostAsync(Document item)
+        {
+            if (string.IsNullOrWhiteSpace(item.Title))
             {
-                if (string.IsNullOrWhiteSpace(item.Title))
-                {
-                    return BadRequest(new { message = "Task name cannot be empty." });
-                }
-                await repository.AddDocumentAsync(item);
-                return Ok();
+                return BadRequest(new { message = "Task name cannot be empty." });
             }
+            await repository.AddDocumentAsync(item);
+            return Ok();
         }
     }
+    
 }

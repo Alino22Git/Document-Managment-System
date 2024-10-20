@@ -24,7 +24,7 @@ namespace DMS_REST_API.Controllers
         public async Task<IActionResult> Get()
         {
             var client = _httpClientFactory.CreateClient("DMS_DAL");
-            var response = await client.GetAsync("/api/document"); 
+            var response = await client.GetAsync("/api/documents"); 
 
             if (response.IsSuccessStatusCode)
             {
@@ -39,7 +39,7 @@ namespace DMS_REST_API.Controllers
         public async Task<IActionResult> GetById(int id)
         {
             var client = _httpClientFactory.CreateClient("DMS_DAL");
-            var response = await client.GetAsync($"/api/document/{id}");
+            var response = await client.GetAsync($"/api/documents/{id}");
             if (response.IsSuccessStatusCode)
             {
                 var item = await response.Content.ReadFromJsonAsync<DocumentDto>(); 
@@ -59,7 +59,7 @@ namespace DMS_REST_API.Controllers
         {
             var client = _httpClientFactory.CreateClient("DMS_DAL");
             var item = _mapper.Map<Document>(dtoItem);
-            var response = await client.PostAsJsonAsync("/api/document", item);
+            var response = await client.PostAsJsonAsync("/api/documents", item);
 
             if (response.IsSuccessStatusCode)
             {
