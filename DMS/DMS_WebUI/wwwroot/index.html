@@ -7,26 +7,38 @@
     <link rel="stylesheet" href="/site.css">
 </head>
 <body>
-<div class="container">
-    <h1>Dashboard</h1>
-    <p>Willkommen zu Ihrem einfachen Dashboard.</p>
-
-    
-    <table>
-        <thead>
-        <tr>
-            <th>Nachricht</th>
-            <th>Zeitstempel</th>
-            <th>Status</th>
-        </tr>
-        </thead>
-        <tbody id="apiTableBody">
-        <!-- Hier werden die API-Daten eingefügt -->
-        </tbody>
-    </table>
-</div>
+    <div class="container">
+        <h1>Dashboard</h1>
+        <p>Willkommen zu Ihrem einfachen Dashboard.</p>
 
 
-<script src="./js/site.js"></script>
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Titel</th>
+                <th>Dateityp</th>
+            </tr>
+            </thead>
+            <tbody id="apiTableBody">
+            <!-- Hier werden die API-Daten eingefügt -->
+            </tbody>
+        </table>
+
+    </div>
+
+    <div><ul id="Documents"></ul></div>
+    <div>
+        <h3>Add New Doc</h3>
+        <input type="text" id="documentTitle" placeholder="Document Title">
+        <input type="text" id="documentType" placeholder="Document Type">
+        <button onclick="addDocument()">Add Doc</button>
+    </div>
+
+    <div>
+        <h3>Reload Doc</h3>
+        <button onclick="fetchDocuments()">Fetch Docs</button>
+    </div>
+    <script src="./js/site.js"></script>
 </body>
 </html>

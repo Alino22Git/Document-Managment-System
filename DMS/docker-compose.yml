@@ -4,13 +4,15 @@ services:
   dms_rest_api:
     image: dms_rest_api
     build:
-      context: ./DMS_REST_API
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: /DMS_REST_API/Dockerfile
     ports:
       - "8080:8080"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:8080
+    depends_on:
+      - dms_dal
 
   webui:
     image: dms_webui
@@ -24,3 +26,31 @@ services:
       - ./DMS_WebUI/wwwroot:/app/wwwroot  # Statische Dateien mounten
     depends_on:
       - dms_rest_api
+ 
+
+  db:
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    ports:
+     - "5432:5432"
+    volumes:
+     - postgres_data:/var/lib/postgresql/data
+
+  dms_dal:
+    image: dms_dal
+    build:
+      context: .
+      dockerfile: ./DMS_DAL/Dockerfile
+    ports:
+      - "8081:8081"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8081
+    depends_on:
+      - db
+
+volumes:
+    postgres_data:
