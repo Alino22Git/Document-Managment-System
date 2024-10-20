@@ -1,6 +1,5 @@
 using System.Reflection;
-
-var builder = WebApplication.CreateBuilder(args);
+using DMS_REST_API.Controllers;var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
@@ -27,13 +26,22 @@ builder.Services.AddSwaggerGen(c =>
     c.IncludeXmlComments(xmlPath);
 });
 
+builder.Services.AddHttpClient("DMS_DAL", client =>
+{
+    client.BaseAddress = new Uri("http://dms_dal:8081"); // URL des DAL Services in Docker
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c=>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1");
+        c.RoutePrefix = "swagger";
+    });
 }
 
 app.UseCors("AllowWebUI");
