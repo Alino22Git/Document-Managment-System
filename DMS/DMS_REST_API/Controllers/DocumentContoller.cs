@@ -90,14 +90,15 @@ namespace DMS_REST_API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] DocumentDto dtoItem)
         {
+            Console.WriteLine("TESTAPI12345678");
             if (dtoItem == null)
             {
                 _logger.LogWarning("POST-Anfrage mit null DokumentDto empfangen.");
                 return BadRequest(new { message = "Dokument darf nicht null sein." });
             }
-
             if (!ModelState.IsValid)
             {
+                Console.WriteLine("TESTVALIDATION");
                 _logger.LogWarning("Model-Validierung für POST fehlgeschlagen: {ModelState}", ModelState);
                 return BadRequest(ModelState);
             }

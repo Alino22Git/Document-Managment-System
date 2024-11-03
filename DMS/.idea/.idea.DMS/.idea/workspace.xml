@@ -29,10 +29,12 @@
     <list default="true" id="d039b34e-bbb2-4ba7-9af8-85ad4bded8b2" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DMS/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DMS/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DMS_DAL/Controllers/DocumentsController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DMS_DAL/Controllers/DocumentsController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DMS_DAL/Entities/Document.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DMS_DAL/Entities/Document.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DMS_REST_API/Controllers/DocumentContoller.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DMS_REST_API/Controllers/DocumentContoller.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DMS_REST_API/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DMS_REST_API/Program.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DMS_REST_API/rest.appsettings.Development.json" beforeDir="false" afterPath="$PROJECT_DIR$/DMS_REST_API/rest.appsettings.Development.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DMS_REST_API/rest.appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/DMS_REST_API/rest.appsettings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DMS_WebUI/wwwroot/js/site.js" beforeDir="false" afterPath="$PROJECT_DIR$/DMS_WebUI/wwwroot/js/site.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -59,6 +61,8 @@
     <setting file="mock://C:/Users/micha/RiderProjects/Document-Managment-System/DMS/DMS_REST_API/Controllers/DocumentContoller.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/micha/RiderProjects/Document-Managment-System/DMS/DMS_REST_API/Services/RabbitMQPublisher.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/micha/RiderProjects/Document-Managment-System/DMS/DMS_REST_API/Services/RabbitMQPublisher.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/DMS_WebUI/wwwroot/lib/bootstrap/dist/js/bootstrap.bundle.js.map" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/DMS_WebUI/wwwroot/lib/bootstrap/dist/js/bootstrap.bundle.min.js.map" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/DMS_WebUI/wwwroot/lib/bootstrap/dist/js/bootstrap.esm.min.js.map" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="KubernetesApiPersistence">{}</component>
