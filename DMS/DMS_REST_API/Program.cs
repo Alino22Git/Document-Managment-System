@@ -1,4 +1,3 @@
-// DMS_REST_API/Program.cs
 using System.Reflection;
 using DMS_REST_API.Mappings;
 using DMS_REST_API.Services;
@@ -58,8 +57,8 @@ builder.Services.AddDbContext<DMS_Context>(options =>
 // Repository registrieren
 builder.Services.AddScoped<IDocumentRepository, DocumentRepository>();
 
-// RabbitMQPublisher registrieren
-builder.Services.AddSingleton<RabbitMQPublisher>();
+// RabbitMQPublisher als IRabbitMQPublisher registrieren
+builder.Services.AddSingleton<IRabbitMQPublisher, RabbitMQPublisher>();
 
 // Hosted Services registrieren (optional)
 builder.Services.AddHostedService<OcrWorker>();

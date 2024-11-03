@@ -2,8 +2,10 @@
 using DMS_REST_API.DTO;
 using System.Text.Json;
 using System.Text;
+using DMS_REST_API.Services;
 
-public class RabbitMQPublisher
+
+public class RabbitMQPublisher : IRabbitMQPublisher, IDisposable
 {
     private readonly IConnection _connection; // RabbitMQ connection
     private readonly IModel _channel; // channel for communicating with RabbitMQ

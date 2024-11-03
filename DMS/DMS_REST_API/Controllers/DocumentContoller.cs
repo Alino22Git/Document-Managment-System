@@ -18,13 +18,13 @@ namespace DMS_REST_API.Controllers
         private readonly IDocumentRepository _repository;
         private readonly IMapper _mapper;
         private readonly ILogger<DocumentController> _logger;
-        private readonly RabbitMQPublisher _rabbitMQPublisher;
+        private readonly IRabbitMQPublisher _rabbitMQPublisher;
 
         public DocumentController(
             IDocumentRepository repository,
             IMapper mapper,
             ILogger<DocumentController> logger,
-            RabbitMQPublisher rabbitMQPublisher)
+            IRabbitMQPublisher rabbitMQPublisher)
         {
             _repository = repository;
             _mapper = mapper;
@@ -96,6 +96,7 @@ namespace DMS_REST_API.Controllers
                 _logger.LogWarning("POST-Anfrage mit null DokumentDto empfangen.");
                 return BadRequest(new { message = "Dokument darf nicht null sein." });
             }
+            Console.WriteLine("TESTVALIDATION");
             if (!ModelState.IsValid)
             {
                 Console.WriteLine("TESTVALIDATION");
