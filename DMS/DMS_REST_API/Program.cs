@@ -5,29 +5,24 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using DMS_REST_API.DTO;
 using DMS_DAL.Repositories;
-using DMS_DAL.Data; // Namespace für DMS_Context
+using DMS_DAL.Data; 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Logging konfigurieren
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 builder.Logging.AddDebug();
 builder.Logging.AddFilter("Microsoft.AspNetCore.Routing", LogLevel.Debug);
 
-// Add services to the container.
 builder.Services.AddControllers();
 
-// AutoMapper konfigurieren
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
-// FluentValidation konfigurieren
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssemblyContaining<DocumentDtoValidator>();
 
-// CORS konfigurieren
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowWebUI",
@@ -40,7 +35,6 @@ builder.Services.AddCors(options =>
         });
 });
 
-// Swagger/OpenAPI konfigurieren
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -49,7 +43,6 @@ builder.Services.AddSwaggerGen(c =>
     c.IncludeXmlComments(xmlPath);
 });
 
-// Datenbankkontext konfigurieren (PostgreSQL)
 builder.Services.AddDbContext<DMS_Context>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DMS_Database"))
 );
@@ -65,7 +58,6 @@ builder.Services.AddHostedService<OcrWorker>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
