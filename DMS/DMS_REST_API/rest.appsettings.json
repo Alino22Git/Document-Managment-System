@@ -11,5 +11,8 @@
     "UserName": "user",
     "Password": "password",
     "ExchangeName": "document_events"
+  },
+  "ConnectionStrings": {
+    "DMS_Database": "Host=host.docker.internal;Database=postgres;Username=postgres;Password=postgres"
   }
 }
