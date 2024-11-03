@@ -13,6 +13,7 @@ services:
       - ASPNETCORE_URLS=http://+:8080
     depends_on:
       - dms_dal
+      - rabbitmq
 
   webui:
     image: dms_webui
@@ -51,6 +52,17 @@ services:
       - ASPNETCORE_URLS=http://+:8081
     depends_on:
       - db
+  
+  rabbitmq:
+    image: rabbitmq:management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - ./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+    environment:
+      - RABBITMQ_DEFAULT_USER=user
+      - RABBITMQ_DEFAULT_PASS=password
 
 volumes:
     postgres_data:
