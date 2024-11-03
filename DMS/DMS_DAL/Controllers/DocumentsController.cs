@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 namespace DMS_DAL.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class DocumentsController : ControllerBase
     {
         private readonly IDocumentRepository _repository;
@@ -22,6 +22,7 @@ namespace DMS_DAL.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Document>>> GetAsync()
         {
+            Console.WriteLine("TESTDAL");
             var documents = await _repository.GetAllDocumentsAsync();
             return Ok(documents);
         }
