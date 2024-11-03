@@ -2,6 +2,10 @@ using System.Reflection;
 using DMS_REST_API.Mappings;
 using DMS_REST_API.Controllers;
 using DMS_REST_API.Services;
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using DMS_REST_API.DTO;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +19,9 @@ builder.Logging.AddFilter("Microsoft.AspNetCore.Routing", LogLevel.Debug);
 builder.Services.AddControllers();
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
+
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssemblyContaining<DocumentDtoValidator>();
 
 builder.Services.AddCors(options =>
 {

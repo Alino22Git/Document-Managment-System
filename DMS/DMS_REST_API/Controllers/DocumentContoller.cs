@@ -31,6 +31,7 @@ namespace DMS_REST_API.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
+            
             var client = _httpClientFactory.CreateClient("DMS_DAL");
             var response = await client.GetAsync("/api/documents");
 
@@ -48,6 +49,7 @@ namespace DMS_REST_API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
+
             var client = _httpClientFactory.CreateClient("DMS_DAL");
             var response = await client.GetAsync($"/api/documents/{id}");
             if (response.IsSuccessStatusCode)
@@ -68,6 +70,11 @@ namespace DMS_REST_API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(DocumentDto dtoItem)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             var client = _httpClientFactory.CreateClient("DMS_DAL");
             var item = _mapper.Map<Document>(dtoItem);
             var response = await client.PostAsJsonAsync("/api/documents", item);
@@ -95,6 +102,11 @@ namespace DMS_REST_API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, DocumentDto dtoItem)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             if (id != dtoItem.Id)
             {
                 return BadRequest("Die ID in der URL stimmt nicht mit der ID des Dokuments überein.");
