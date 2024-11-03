@@ -94,7 +94,7 @@ function addDocument() {
 
     if (documentTitle.trim() === '' || documentType.trim() === '') {
         alert('Bitte geben Sie sowohl einen Titel als auch einen Dateityp ein.');
-        return;
+        //return;
     }
 
     const newDoc = {
