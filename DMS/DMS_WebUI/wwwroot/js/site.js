@@ -2,9 +2,6 @@
 const apiUrl = 'api/document';
 
 // Funktion zum Abrufen und Anzeigen der API-Daten in der Tabelle
-// URL der API
-
-// Funktion zum Abrufen und Anzeigen der API-Daten in der Tabelle
 function fetchDocuments() {
     fetch(apiUrl)
         .then(response => {
@@ -40,8 +37,30 @@ function fetchDocuments() {
                 editButton.textContent = 'Bearbeiten';
                 editButton.classList.add('btn', 'btn-sm', 'btn-warning', 'mr-1');
                 editButton.onclick = () => {
-                    // Hier können Sie eine Bearbeitungsfunktion implementieren
-                };
+                    // Prompt für den neuen Titel
+                    const newTitle = prompt('Bitte geben Sie den neuen Titel ein:', item.title);
+
+                    // Optional: Prompt für den neuen Dateityp (falls auch geändert werden soll)
+                    // const newFileType = prompt('Bitte geben Sie den neuen Dateityp ein:', item.fileType);
+
+                    if (newTitle !== null) {
+                        // Wenn nur der Titel geändert wird und FileType unverändert bleibt
+                        const updatedData = {
+                            id: item.id,
+                            title: newTitle,
+                            fileType: item.fileType // Unveränderte FileType
+                        };
+
+                        /*
+                        // Wenn auch der Dateityp geändert werden soll
+                        if (newFileType !== null) {
+                            updatedData.fileType = newFileType;
+                        }
+                        */
+
+                        updateDocument(item.id, updatedData);
+                    }
+                }
                 actionsCell.appendChild(editButton);
 
                 // Löschen-Schaltfläche
@@ -68,23 +87,23 @@ function fetchDocuments() {
         });
 }
 
-
+// Funktion zum Hinzufügen eines neuen Dokuments
 function addDocument() {
     const documentTitle = document.getElementById('documentTitle').value;
     const documentType = document.getElementById('documentType').value;
 
-    if (documentTitle.trim() === '') {
-        alert('Please enter a task name');
+    if (documentTitle.trim() === '' || documentType.trim() === '') {
+        alert('Bitte geben Sie sowohl einen Titel als auch einen Dateityp ein.');
         return;
     }
 
-
-
     const newDoc = {
-        Id: 0,
-        Title: documentTitle,
-        FileType: documentType,
+        id: 0, // Backend wird die ID generieren
+        title: documentTitle,
+        fileType: documentType,
     };
+
+    console.log("Neues Dokument:", newDoc);
 
     fetch(apiUrl, {
         method: 'POST',
@@ -95,17 +114,20 @@ function addDocument() {
     })
         .then(response => {
             if (response.ok) {
-                fetchDocuments(); // Refresh the list after adding
+                fetchDocuments(); // Aktualisieren Sie die Liste nach dem Hinzufügen
                 document.getElementById('documentTitle').value = '';
-                document.getElementById('documentType').value = '';// Clear the input field
+                document.getElementById('documentType').value = ''; // Eingabefelder leeren
             } else {
-                // Neues Handling für den Fall eines Fehlers (z.B. leeres Namensfeld)
-                response.json().then(err => alert("Fehler: " + err.message));
-                console.error('Fehler beim Hinzufügen der Aufgabe.');
+                response.json().then(err => {
+                    alert("Fehler: " + err.title);
+                    console.error('Fehler beim Hinzufügen des Dokuments:', err);
+                });
             }
         })
         .catch(error => console.error('Fehler:', error));
 }
+
+// Funktion zum Aktualisieren eines Dokuments
 function updateDocument(documentId, updatedData) {
     fetch(`${apiUrl}/${documentId}`, {
         method: 'PUT',
@@ -116,27 +138,34 @@ function updateDocument(documentId, updatedData) {
     })
         .then(response => {
             if (response.ok) {
-                fetchDocuments(); // Aktualisiere die Liste nach dem Update
+                fetchDocuments(); // Aktualisieren Sie die Liste nach dem Aktualisieren
             } else {
-                console.error('Fehler beim Aktualisieren des Dokuments.');
+                response.json().then(err => {
+                    alert("Fehler: " + err.title);
+                    console.error('Fehler beim Aktualisieren des Dokuments:', err);
+                });
             }
         })
         .catch(error => console.error('Fehler:', error));
 }
+
+// Funktion zum Löschen eines Dokuments
 function deleteDocument(documentId) {
     fetch(`${apiUrl}/${documentId}`, {
         method: 'DELETE'
     })
         .then(response => {
             if (response.ok) {
-                fetchDocuments(); // Aktualisiere die Liste nach dem Löschen
+                fetchDocuments(); // Aktualisieren Sie die Liste nach dem Löschen
             } else {
-                console.error('Fehler beim Löschen des Dokuments.');
+                response.json().then(err => {
+                    alert("Fehler: " + err.title);
+                    console.error('Fehler beim Löschen des Dokuments:', err);
+                });
             }
         })
         .catch(error => console.error('Fehler:', error));
 }
-
 
 // Daten beim Laden der Seite abrufen
 document.addEventListener('DOMContentLoaded', fetchDocuments);
