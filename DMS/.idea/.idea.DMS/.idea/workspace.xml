@@ -32,9 +32,11 @@
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DMS/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DMS/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DMS_DAL/Controllers/DocumentsController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DMS_DAL/Controllers/DocumentsController.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DMS_DAL/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DMS_DAL/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DMS_DAL/Repositories/DocumentRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DMS_DAL/Repositories/DocumentRepository.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DMS_REST_API/Controllers/DocumentContoller.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DMS_REST_API/Controllers/DocumentContoller.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DMS_REST_API/Controllers/HomeController.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/DMS_REST_API/Controllers/WeatherForecastController.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DMS_REST_API/Mappings/MappingProfile.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DMS_REST_API/Mappings/MappingProfile.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DMS_REST_API/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DMS_REST_API/Program.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DMS_REST_API/WeatherForecast.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/DMS_REST_API/rest.appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/DMS_REST_API/rest.appsettings.json" afterDir="false" />
@@ -381,7 +383,7 @@
       <workItem from="1730634759022" duration="14763000" />
       <workItem from="1730657857916" duration="942000" />
       <workItem from="1730658852738" duration="123000" />
-      <workItem from="1730658990713" duration="257000" />
+      <workItem from="1730658990713" duration="1462000" />
     </task>
     <servers />
   </component>
