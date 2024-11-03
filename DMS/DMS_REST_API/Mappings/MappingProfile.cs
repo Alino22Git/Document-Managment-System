@@ -25,7 +25,6 @@ namespace DMS_REST_API.Mappings
                     => opt.MapFrom(src => (src.Title ?? string.Empty).Replace(" mapped", "")))
                 .ForMember(dest => dest.FileType, opt
                     => opt.MapFrom(src => src.FileType));
-
         }
     }
 }

@@ -1,30 +1,21 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using DMS_DAL.Repositories;
 using DMS_DAL.Entities;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 
 namespace DMS_DAL.Controllers
 {
-    
     [ApiController]
-    [Route("api/[controller]")]
-    public class DocumentsController(IDocumentRepository repository) : ControllerBase
+    [Route("[controller]")]
+    public class DocumentsController : ControllerBase
     {
-        [HttpGet]
-        public async Task<IEnumerable<Document>> GetAsync()
-        {
-            return await repository.GetAllDocumentsAsync();
-        }
+        private readonly IDocumentRepository _repository;
 
-        [HttpPost]
-        public async Task<IActionResult> PostAsync(Document item)
+        public DocumentsController(IDocumentRepository repository)
         {
-            if (string.IsNullOrWhiteSpace(item.Title))
-            {
-                return BadRequest(new { message = "Task name cannot be empty." });
-            }
-            await repository.AddDocumentAsync(item);
-            return Ok();
+            _repository = repository;
         }
     }
-    
 }

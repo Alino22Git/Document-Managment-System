@@ -14,6 +14,7 @@ builder.Services.AddDbContext<DMS_Context>(options =>
 );
 builder.Services.AddScoped<IDocumentRepository, DocumentRepository>();
 var app = builder.Build();
+app.UseRouting();
 
 using (var scope = app.Services.CreateScope())
 {

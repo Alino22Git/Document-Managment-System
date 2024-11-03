@@ -1,28 +1,46 @@
 using System.Reflection;
 using DMS_REST_API.Mappings;
-using DMS_REST_API.Controllers;
+using DMS_REST_API.Services;
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using DMS_REST_API.DTO;
+using DMS_DAL.Repositories;
+using DMS_DAL.Data; // Namespace für DMS_Context
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Logging konfigurieren
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+builder.Logging.AddDebug();
+builder.Logging.AddFilter("Microsoft.AspNetCore.Routing", LogLevel.Debug);
 
+// Add services to the container.
 builder.Services.AddControllers();
 
+// AutoMapper konfigurieren
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
+// FluentValidation konfigurieren
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssemblyContaining<DocumentDtoValidator>();
+
+// CORS konfigurieren
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowWebUI",
         policy =>
         {
-            policy.WithOrigins("http://localhost") // Die URL deiner Web-UI
-                .AllowAnyHeader()
+            policy
                 .AllowAnyOrigin()
+                .AllowAnyHeader()
                 .AllowAnyMethod();
         });
 });
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+// Swagger/OpenAPI konfigurieren
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -31,10 +49,19 @@ builder.Services.AddSwaggerGen(c =>
     c.IncludeXmlComments(xmlPath);
 });
 
-builder.Services.AddHttpClient("DMS_DAL", client =>
-{
-    client.BaseAddress = new Uri("http://dms_dal:8081"); // URL des DAL Services in Docker
-});
+// Datenbankkontext konfigurieren (PostgreSQL)
+builder.Services.AddDbContext<DMS_Context>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DMS_Database"))
+);
+
+// Repository registrieren
+builder.Services.AddScoped<IDocumentRepository, DocumentRepository>();
+
+// RabbitMQPublisher als IRabbitMQPublisher registrieren
+builder.Services.AddSingleton<IRabbitMQPublisher, RabbitMQPublisher>();
+
+// Hosted Services registrieren (optional)
+builder.Services.AddHostedService<OcrWorker>();
 
 var app = builder.Build();
 
@@ -42,18 +69,19 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI(c=>
+    app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1");
         c.RoutePrefix = "swagger";
     });
 }
 
+app.UseRouting();
+
 app.UseCors("AllowWebUI");
 
-app.Urls.Add("http://*:8080");
-
-app.UseHttpsRedirection();
+// Optional: HTTPS-Umleitung aktivieren
+// app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
