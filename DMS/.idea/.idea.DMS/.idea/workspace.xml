@@ -28,12 +28,10 @@
   <component name="ChangeListManager">
     <list default="true" id="d039b34e-bbb2-4ba7-9af8-85ad4bded8b2" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DMS/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DMS/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DMS_DAL/Entities/Document.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DMS_DAL/Entities/Document.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DMS_REST_API/DTO/DocumentDto.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DMS_REST_API/DTO/DocumentDto.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DMS_REST_API/Mappings/MappingProfile.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DMS_REST_API/Mappings/MappingProfile.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DMS_WebUI/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/DMS_WebUI/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DMS_WebUI/nginx.conf" beforeDir="false" afterPath="$PROJECT_DIR$/DMS_WebUI/nginx.conf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DMS_WebUI/wwwroot/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/DMS_WebUI/wwwroot/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DMS_WebUI/wwwroot/js/site.js" beforeDir="false" afterPath="$PROJECT_DIR$/DMS_WebUI/wwwroot/js/site.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../DMS_Tests/DocumentTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../DMS_Tests/DocumentTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,9 +41,25 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;MichaelReichenberger&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/Alino22Git/Document-Managment-System.git&quot;,
+    &quot;accountId&quot;: &quot;3cf0a14d-985e-46b9-9e5b-839dd698bc48&quot;
+  }
+}</component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/WebApplication1/Program.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
+  <component name="KubernetesApiPersistence">{}</component>
+  <component name="KubernetesApiProvider">{
+  &quot;isMigrated&quot;: true
+}</component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
@@ -70,12 +84,13 @@
     "Docker.DMS_WebUI/Dockerfile.executor": "Run",
     "Docker.docker-compose.yml: Compose Deployment.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "DAL-in-its-own-Project",
+    "git-widget-placeholder": "Rabbit-MQ-Integration",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.general",
     "vue.rearranger.settings.migration": "true"
   },
   "keyToStringList": {
@@ -349,6 +364,8 @@
       <workItem from="1726660301636" duration="1789000" />
       <workItem from="1726663160858" duration="65000" />
       <workItem from="1726673685927" duration="542000" />
+      <workItem from="1730634517291" duration="227000" />
+      <workItem from="1730634759022" duration="773000" />
     </task>
     <servers />
   </component>

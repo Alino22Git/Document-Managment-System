@@ -23,7 +23,7 @@ services:
       - "80:80"
     volumes:
       - ./DMS_WebUI/nginx.conf:/etc/nginx/nginx.conf  # Binde die Nginx-Konfigurationsdatei ein
-      - ./DMS_WebUI/wwwroot:/app/wwwroot  # Statische Dateien mounten
+      - ./DMS_WebUI/wwwroot:/usr/share/nginx/html     # Statische Dateien korrekt mounten
     depends_on:
       - dms_rest_api
  

@@ -4,41 +4,54 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
+    <!-- Bootstrap CSS einbinden -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Ihre eigene CSS-Datei -->
     <link rel="stylesheet" href="/site.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Dashboard</h1>
-        <p>Willkommen zu Ihrem einfachen Dashboard.</p>
+<div class="container">
+    <h1>Dashboard</h1>
+    <p>Willkommen zu Ihrem einfachen Dashboard.</p>
 
+    <table class="table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Titel</th>
+            <th>Dateityp</th>
+        </tr>
+        </thead>
+        <tbody id="apiTableBody">
+        <!-- Hier werden die API-Daten eingefügt -->
+        </tbody>
+    </table>
 
-        <table>
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>Titel</th>
-                <th>Dateityp</th>
-            </tr>
-            </thead>
-            <tbody id="apiTableBody">
-            <!-- Hier werden die API-Daten eingefügt -->
-            </tbody>
-        </table>
+</div>
 
+<div class="container">
+    <ul id="Documents"></ul>
+</div>
+<div class="container">
+    <h3>Add New Doc</h3>
+    <div class="form-group">
+        <input type="text" id="documentTitle" class="form-control" placeholder="Document Title">
     </div>
-
-    <div><ul id="Documents"></ul></div>
-    <div>
-        <h3>Add New Doc</h3>
-        <input type="text" id="documentTitle" placeholder="Document Title">
-        <input type="text" id="documentType" placeholder="Document Type">
-        <button onclick="addDocument()">Add Doc</button>
+    <div class="form-group">
+        <input type="text" id="documentType" class="form-control" placeholder="Document Type">
     </div>
+    <button class="btn btn-primary" onclick="addDocument()">Add Doc</button>
+</div>
 
-    <div>
-        <h3>Reload Doc</h3>
-        <button onclick="fetchDocuments()">Fetch Docs</button>
-    </div>
-    <script src="./js/site.js"></script>
+<div class="container">
+    <h3>Reload Doc</h3>
+    <button class="btn btn-secondary" onclick="fetchDocuments()">Fetch Docs</button>
+</div>
+
+<!-- jQuery und Bootstrap JS einbinden -->
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<!-- Ihre eigene JS-Datei -->
+<script src="./js/site.js"></script>
 </body>
 </html>
