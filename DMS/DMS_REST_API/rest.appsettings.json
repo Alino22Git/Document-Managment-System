@@ -5,5 +5,11 @@
       "Microsoft.AspNetCore": "Warning"
     }
   },
-  "AllowedHosts": "*"
+  "AllowedHosts": "*",
+  "RabbitMQ": {
+    "HostName": "rabbitmq",
+    "UserName": "user",
+    "Password": "password",
+    "ExchangeName": "document_events"
+  }
 }

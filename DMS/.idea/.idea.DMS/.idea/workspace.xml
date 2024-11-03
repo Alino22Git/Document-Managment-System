@@ -27,11 +27,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d039b34e-bbb2-4ba7-9af8-85ad4bded8b2" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/rabbitmq.conf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DMS_REST_API/Services/OcrWorker.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DMS_REST_API/Services/RabbitMQPublisher.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DMS/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DMS/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DMS_DAL/Controllers/DocumentsController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DMS_DAL/Controllers/DocumentsController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DMS_DAL/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DMS_DAL/Program.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DMS_REST_API/Controllers/DocumentContoller.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DMS_REST_API/Controllers/DocumentContoller.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DMS_REST_API/DMS_REST_API.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/DMS_REST_API/DMS_REST_API.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-compose.dcproj" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.dcproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DMS_REST_API/Controllers/HomeController.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DMS_REST_API/Controllers/WeatherForecastController.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DMS_REST_API/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DMS_REST_API/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DMS_REST_API/WeatherForecast.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DMS_REST_API/rest.appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/DMS_REST_API/rest.appsettings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DMS_WebUI/wwwroot/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/DMS_WebUI/wwwroot/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DMS_WebUI/wwwroot/js/site.js" beforeDir="false" afterPath="$PROJECT_DIR$/DMS_WebUI/wwwroot/js/site.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -55,7 +63,11 @@
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/WebApplication1/Program.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/micha/RiderProjects/Document-Managment-System/DMS/DMS_REST_API/Controllers/DocumentContoller.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/micha/RiderProjects/Document-Managment-System/DMS/DMS_REST_API/Controllers/DocumentContoller.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/micha/RiderProjects/Document-Managment-System/DMS/DMS_REST_API/Services/RabbitMQPublisher.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/micha/RiderProjects/Document-Managment-System/DMS/DMS_REST_API/Services/RabbitMQPublisher.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/DMS_WebUI/wwwroot/lib/bootstrap/dist/js/bootstrap.esm.min.js.map" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="KubernetesApiPersistence">{}</component>
   <component name="KubernetesApiProvider">{
@@ -77,34 +89,34 @@
     <option name="showLibraryContents" value="true" />
     <option name="sortKey" value="BY_TIME_ASCENDING" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    ".NET Launch Settings Profile.DMS: IIS Express.executor": "Run",
-    ".NET Launch Settings Profile.DMS: http.executor": "Run",
-    ".NET Launch Settings Profile.DMS: https.executor": "Run",
-    "Docker.DMS_WebUI/Dockerfile.executor": "Run",
-    "Docker.docker-compose.yml: Compose Deployment.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "Rabbit-MQ-Integration",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.general",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;.NET Launch Settings Profile.DMS: IIS Express.executor&quot;: &quot;Run&quot;,
+    &quot;.NET Launch Settings Profile.DMS: http.executor&quot;: &quot;Run&quot;,
+    &quot;.NET Launch Settings Profile.DMS: https.executor&quot;: &quot;Run&quot;,
+    &quot;Docker.DMS_WebUI/Dockerfile.executor&quot;: &quot;Run&quot;,
+    &quot;Docker.docker-compose.yml: Compose Deployment.executor&quot;: &quot;Debug&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Rabbit-MQ-Integration&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.general&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "postgresql"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;postgresql&quot;
     ],
-    "rider.external.source.directories": [
-      "C:\\Users\\micha\\AppData\\Roaming\\JetBrains\\Rider2024.1\\resharper-host\\DecompilerCache",
-      "C:\\Users\\micha\\AppData\\Roaming\\JetBrains\\Rider2024.1\\resharper-host\\SourcesCache",
-      "C:\\Users\\micha\\AppData\\Local\\Symbols\\src"
+    &quot;rider.external.source.directories&quot;: [
+      &quot;C:\\Users\\micha\\AppData\\Roaming\\JetBrains\\Rider2024.1\\resharper-host\\DecompilerCache&quot;,
+      &quot;C:\\Users\\micha\\AppData\\Roaming\\JetBrains\\Rider2024.1\\resharper-host\\SourcesCache&quot;,
+      &quot;C:\\Users\\micha\\AppData\\Local\\Symbols\\src&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected="Docker.docker-compose.yml: Compose Deployment">
     <configuration name="DMS: IIS Express" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
       <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/DMS/DMS.csproj" />
@@ -366,7 +378,10 @@
       <workItem from="1726663160858" duration="65000" />
       <workItem from="1726673685927" duration="542000" />
       <workItem from="1730634517291" duration="227000" />
-      <workItem from="1730634759022" duration="5716000" />
+      <workItem from="1730634759022" duration="14763000" />
+      <workItem from="1730657857916" duration="942000" />
+      <workItem from="1730658852738" duration="123000" />
+      <workItem from="1730658990713" duration="257000" />
     </task>
     <servers />
   </component>

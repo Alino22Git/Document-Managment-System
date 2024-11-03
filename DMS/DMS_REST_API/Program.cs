@@ -1,11 +1,17 @@
 using System.Reflection;
 using DMS_REST_API.Mappings;
 using DMS_REST_API.Controllers;
+using DMS_REST_API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Logging konfigurieren
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+builder.Logging.AddDebug();
+builder.Logging.AddFilter("Microsoft.AspNetCore.Routing", LogLevel.Debug);
 
+// Add services to the container.
 builder.Services.AddControllers();
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
@@ -15,9 +21,9 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowWebUI",
         policy =>
         {
-            policy.WithOrigins("http://localhost") // Die URL deiner Web-UI
-                .AllowAnyHeader()
+            policy
                 .AllowAnyOrigin()
+                .AllowAnyHeader()
                 .AllowAnyMethod();
         });
 });
@@ -35,6 +41,8 @@ builder.Services.AddHttpClient("DMS_DAL", client =>
 {
     client.BaseAddress = new Uri("http://dms_dal:8081"); // URL des DAL Services in Docker
 });
+builder.Services.AddSingleton<RabbitMQPublisher>();
+builder.Services.AddHostedService<OcrWorker>();
 
 var app = builder.Build();
 
@@ -42,18 +50,19 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI(c=>
+    app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1");
         c.RoutePrefix = "swagger";
     });
 }
 
+app.UseRouting();
+
 app.UseCors("AllowWebUI");
 
-app.Urls.Add("http://*:8080");
-
-app.UseHttpsRedirection();
+// Entfernen oder kommentieren Sie dies
+// app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
