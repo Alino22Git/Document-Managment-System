@@ -119,7 +119,7 @@ function addDocument() {
                 document.getElementById('documentType').value = ''; // Eingabefelder leeren
             } else {
                 response.json().then(err => {
-                    alert("Fehler: " + err.title);
+                    alert("Fehler: " + err.title + err.message);
                     console.error('Fehler beim Hinzufügen des Dokuments:', err);
                 });
             }
