@@ -120,7 +120,7 @@ namespace DMS_REST_API.Controllers
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, "Fehler beim Senden der 'Created'-Nachricht an RabbitMQ.");
-                    // Optional: Weiteres Handling, z.B. Rollback oder spezielle Rückmeldung
+                   
                 }
 
                 return CreatedAtAction(nameof(GetById), new { id = createdDto.Id }, createdDto);
@@ -184,7 +184,7 @@ namespace DMS_REST_API.Controllers
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, "Fehler beim Senden der 'Updated'-Nachricht an RabbitMQ.");
-                    // Optional: Weiteres Handling
+                   
                 }
 
                 return NoContent();
@@ -226,7 +226,7 @@ namespace DMS_REST_API.Controllers
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, "Fehler beim Senden der 'Deleted'-Nachricht an RabbitMQ.");
-                    // Optional: Weiteres Handling
+                   
                 }
 
                 return NoContent();

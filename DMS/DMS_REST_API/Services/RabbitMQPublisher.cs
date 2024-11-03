@@ -33,7 +33,7 @@ public class RabbitMQPublisher : IRabbitMQPublisher, IDisposable
             _connection = factory.CreateConnection();
             _channel = _connection.CreateModel();
 
-            // declare exchange (like a mailbox) for message routing
+           
             _channel.ExchangeDeclare(ExchangeName, ExchangeType.Direct, durable: true);
 
             // create queues for each event type

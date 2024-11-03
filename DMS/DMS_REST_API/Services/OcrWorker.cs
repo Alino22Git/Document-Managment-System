@@ -38,7 +38,6 @@ namespace DMS_REST_API.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Fehler beim Herstellen der Verbindung zu RabbitMQ");
-                // Entscheiden Sie, ob Sie die Ausnahme behandeln oder erneut auslösen möchten
             }
 
             await base.StartAsync(cancellationToken);
@@ -59,7 +58,7 @@ namespace DMS_REST_API.Services
                 var message = System.Text.Encoding.UTF8.GetString(body);
                 _logger.LogInformation("Empfangene Nachricht: {Message}", message);
 
-                // TODO: Fügen Sie hier die OCR-Verarbeitung hinzu
+                // TODO: OCR verarbeitung einfügen
 
                 await Task.CompletedTask;
             };
@@ -68,7 +67,7 @@ namespace DMS_REST_API.Services
                                  autoAck: true,
                                  consumer: consumer);
 
-            // Halten Sie den Task am Leben, solange der Dienst aktiv ist
+          
             await Task.Delay(Timeout.Infinite, stoppingToken);
         }
 
