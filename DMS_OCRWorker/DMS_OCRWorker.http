@@ -1,0 +1,6 @@
+@DMS_OCRWorker_HostAddress = http://localhost:5255
+
+GET {{DMS_OCRWorker_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

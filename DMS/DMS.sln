@@ -19,7 +19,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DMS_WebUI", "DMS_WebUI\DMS_
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DMS_DAL", "DMS_DAL\DMS_DAL.csproj", "{15843215-6FCB-430C-88A3-E4B4940965ED}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DMS_Tests", "..\DMS_Tests\DMS_Tests.csproj", "{882225D0-2979-4E32-85BF-535E37854FED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DMS_Tests", "..\DMS_Tests\DMS_Tests.csproj", "{882225D0-2979-4E32-85BF-535E37854FED}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DMS_OCRWorker", "..\DMS_OCRWorker\DMS_OCRWorker.csproj", "{BA46351F-6DB7-415A-B1CC-3683104CC926}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,9 +49,16 @@ Global
 		{882225D0-2979-4E32-85BF-535E37854FED}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{882225D0-2979-4E32-85BF-535E37854FED}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{882225D0-2979-4E32-85BF-535E37854FED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA46351F-6DB7-415A-B1CC-3683104CC926}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA46351F-6DB7-415A-B1CC-3683104CC926}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA46351F-6DB7-415A-B1CC-3683104CC926}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA46351F-6DB7-415A-B1CC-3683104CC926}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{BA46351F-6DB7-415A-B1CC-3683104CC926} = {C6C3FCAE-1983-48F2-B7D7-733E7FC8EA8F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BA6BA8DE-A05D-4189-9653-76C7DBDBAEA6}
