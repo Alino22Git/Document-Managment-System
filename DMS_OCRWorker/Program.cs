@@ -3,7 +3,6 @@ using System.Text;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.IO;
-using Microsoft.AspNetCore.Connections;
 using System.Threading.Tasks;
 
 namespace DMS_OCRWorker
@@ -11,6 +10,47 @@ namespace DMS_OCRWorker
     class Program
     {
         static async Task Main(string[] args)
+        {
+            Boolean test = true;
+            // Prüfe, ob ein Testmodus aktiviert ist
+            if (test)
+            {
+                RunOcrTest();
+            }
+            else
+            {
+                await RunRabbitMqWorker();
+            }
+        }
+
+        // OCR-Testfunktion
+        static void RunOcrTest()
+        {
+            Console.WriteLine("Testing OCR functionality...");
+
+            // Relativer Pfad zur Test-PDF-Datei
+            string testPdfPath = "test.pdf"; // Stelle sicher, dass test.pdf im Arbeitsverzeichnis liegt
+
+            try
+            {
+                // OCR-Verarbeitung ausführen
+                var result = OcrProcessor.PerformOcr(testPdfPath);
+
+                // Ergebnis anzeigen
+                Console.WriteLine("OCR Result:");
+                Console.WriteLine(result);
+            }
+            catch (Exception ex)
+            {
+                // Fehler behandeln und ausgeben
+                Console.WriteLine($"Error during OCR processing: {ex.Message}");
+            }
+
+            Console.WriteLine("OCR test completed.");
+        }
+
+        // RabbitMQ-Worker starten
+        static async Task RunRabbitMqWorker()
         {
             Console.WriteLine("OCR Worker started...");
             var factory = new ConnectionFactory() { HostName = "rabbitmq" };
@@ -51,8 +91,8 @@ namespace DMS_OCRWorker
         private static async Task SendToResultQueue(RabbitMQ.Client.IChannel channel, string result)
         {
             var body = Encoding.UTF8.GetBytes(result);
-            var basicProperties = channel.CreateBasicProperties();
-            await channel.BasicPublishAsync<RabbitMQ.Client.IBasicProperties>(exchange: "", routingKey: "RESULT_QUEUE", mandatory: false, basicProperties: basicProperties, body: body);
+            var basicProperties = new RabbitMQ.Client.BasicProperties();
+            await channel.BasicPublishAsync<RabbitMQ.Client.BasicProperties>(exchange: "", routingKey: "RESULT_QUEUE", mandatory: false, basicProperties: basicProperties, body: body);
             Console.WriteLine($"[x] Sent OCR result to RESULT_QUEUE");
         }
     }

@@ -7,6 +7,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="tesseract data\**" />
+    <Content Remove="tesseract data\**" />
+    <EmbeddedResource Remove="tesseract data\**" />
+    <None Remove="tesseract data\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\DMS\.dockerignore" Link=".dockerignore">
+      <DependentUpon>$(DockerDefaultDockerfile)</DependentUpon>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="RabbitMQ.Client" Version="7.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
     <PackageReference Include="Tesseract" Version="5.2.0" />
