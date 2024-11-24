@@ -31,12 +31,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d039b34e-bbb2-4ba7-9af8-85ad4bded8b2" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/DMS_OCR/Dockerfile" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DMS_OCR/OcrProcessor.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DMS/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DMS/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DMS.sln" beforeDir="false" afterPath="$PROJECT_DIR$/DMS.sln" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DMS_REST_API/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DMS_REST_API/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DMS_REST_API/Services/OcrWorker.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DMS_OCR/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/DMS_OCR/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DMS_OCR/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DMS_OCR/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DMS_REST_API/Services/RabbitMQPublisher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DMS_REST_API/Services/RabbitMQPublisher.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -98,7 +96,7 @@
     "Docker.DMS_WebUI/Dockerfile.executor": "Run",
     "Docker.docker-compose.yml: Compose Deployment.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "Rabbit-MQ-Integration",
+    "git-widget-placeholder": "OCR-Worker",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",

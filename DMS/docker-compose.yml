@@ -55,24 +55,31 @@ services:
       - db
   
   
-  ocr_worker:
-    build:
-      context: .
-      dockerfile: DMS_OCR/Dockerfile
-    depends_on:
-      - rabbitmq
-        
-        
   rabbitmq:
-    image: rabbitmq:management
+    image: rabbitmq:3-management
     ports:
       - "5672:5672"
       - "15672:15672"
-    volumes:
-      - ./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
     environment:
-      - RABBITMQ_DEFAULT_USER=user
-      - RABBITMQ_DEFAULT_PASS=password
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    healthcheck:
+      test: [ "CMD", "rabbitmq-diagnostics", "ping" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  ocr_worker:
+      build:
+        context: .
+        dockerfile: DMS_OCR/Dockerfile
+      depends_on:
+        rabbitmq:
+          condition: service_healthy
+      environment:
+        - RABBITMQ_HOST=rabbitmq
+        - RABBITMQ_USER=guest
+        - RABBITMQ_PASSWORD=guest
 
 volumes:
     postgres_data:

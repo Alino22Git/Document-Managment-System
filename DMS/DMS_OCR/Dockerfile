@@ -1,4 +1,4 @@
-﻿FROM mcr.microsoft.com/dotnet/runtime:6.0 AS base
+﻿FROM mcr.microsoft.com/dotnet/runtime:8.0 AS base
 WORKDIR /app
 
 # Installieren von Ghostscript und Abhängigkeiten
@@ -7,7 +7,7 @@ RUN apt-get update && \
     apt-get install -y ghostscript && \
     rm -rf /var/lib/apt/lists/*
 
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 COPY ["DMS_OCR/DMS_OCR.csproj", "DMS_OCR/"]
 RUN dotnet restore "DMS_OCR/DMS_OCR.csproj"

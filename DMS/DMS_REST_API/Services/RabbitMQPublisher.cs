@@ -19,12 +19,12 @@ public class RabbitMQPublisher : IRabbitMQPublisher, IDisposable
     public RabbitMQPublisher(ILogger<RabbitMQPublisher> logger)
     {
         _logger = logger;
-        var factory = new ConnectionFactory
+        var factory = new ConnectionFactory()
         {
-            HostName = "rabbitmq", // docker service name (was localhost before and not working)
-            Port = 5672,
-            UserName = "user",
-            Password = "password"
+            HostName = "rabbitmq", // Stellen Sie sicher, dass dies mit Ihrem Docker-Service-Namen übereinstimmt
+            Port = 5672,           // Standard-AMQP-Port
+            UserName = "guest",
+            Password = "guest"
         };
 
         try
