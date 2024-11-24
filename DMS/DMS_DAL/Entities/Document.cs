@@ -9,5 +9,7 @@ namespace DMS_DAL.Entities
         public string Title { get; set; }
         
         public string FileType { get; set; }
+
+        public string? OcrText { get; set; }
     }
 }

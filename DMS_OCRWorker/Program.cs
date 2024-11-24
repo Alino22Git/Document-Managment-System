@@ -10,7 +10,7 @@ namespace DMS_OCRWorker
 {
     class Program
     {
-        static async Task Main(string[] args)
+        static void Main(string[] args)
         {
             Console.WriteLine("OCR Worker started...");
             var factory = new ConnectionFactory() { HostName = "rabbitmq" };
@@ -57,29 +57,38 @@ namespace DMS_OCRWorker
         }
     }
 
-    public static class OcrProcessor
+    private static async Task SendToResultQueue(RabbitMQ.Client.IChannel channel, string result)
     {
-        public static string PerformOcr(string filePath)
+        var body = Encoding.UTF8.GetBytes(result);
+        var basicProperties = new RabbitMQ.Client.BasicProperties();
+        await channel.BasicPublishAsync<RabbitMQ.Client.BasicProperties>(exchange: "", routingKey: "RESULT_QUEUE", mandatory: false, basicProperties: basicProperties, body: body);
+        Console.WriteLine($"[x] Sent OCR result to RESULT_QUEUE");
+    }
+}
+
+public static class OcrProcessor
+{
+    public static string PerformOcr(string filePath)
+    {
+        if (!File.Exists(filePath))
         {
-            if (!File.Exists(filePath))
-            {
-                throw new FileNotFoundException($"File not found: {filePath}");
-            }
+            throw new FileNotFoundException($"File not found: {filePath}");
+        }
 
-            var ocrResult = new StringBuilder();
+        var ocrResult = new StringBuilder();
 
-            using (var engine = new Tesseract.TesseractEngine(@"./tessdata", "eng", Tesseract.EngineMode.Default))
+        using (var engine = new Tesseract.TesseractEngine(@"./tessdata", "eng", Tesseract.EngineMode.Default))
+        {
+            using (var img = Tesseract.Pix.LoadFromFile(filePath))
             {
-                using (var img = Tesseract.Pix.LoadFromFile(filePath))
+                using (var page = engine.Process(img))
                 {
-                    using (var page = engine.Process(img))
-                    {
-                        ocrResult.Append(page.GetText());
-                    }
+                    ocrResult.Append(page.GetText());
                 }
             }
-
-            return ocrResult.ToString();
         }
-    }
+
+        return ocrResult.ToString();
+    }*/
+}
 }
