@@ -54,6 +54,15 @@ services:
     depends_on:
       - db
   
+  
+  ocr_worker:
+    build:
+      context: .
+      dockerfile: DMS_OCR/Dockerfile
+    depends_on:
+      - rabbitmq
+        
+        
   rabbitmq:
     image: rabbitmq:management
     ports:
@@ -67,3 +76,5 @@ services:
 
 volumes:
     postgres_data:
+    
+    
