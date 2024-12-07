@@ -87,14 +87,19 @@ namespace DMS_OCR
                 {
                     channel = connection.CreateModel();
 
-                    // Deklarieren der Exchange
+                    // Deklarieren der Exchange für eingehende Dokumentereignisse
                     channel.ExchangeDeclare(exchange: "document_events", type: ExchangeType.Direct, durable: true, autoDelete: false);
 
                     // Deklarieren der Warteschlangen
                     channel.QueueDeclare(queue: "document.created", durable: true, exclusive: false, autoDelete: false, arguments: null);
+                    channel.QueueDeclare(queue: "ocr_result_queue", durable: true, exclusive: false, autoDelete: false, arguments: null); // Neue Queue für OCR-Ergebnisse
 
                     // Binden der Queue an die Exchange mit dem Routing Key "created"
                     channel.QueueBind(queue: "document.created", exchange: "document_events", routingKey: "created");
+
+                    // Deklarieren der Exchange und Queue für OCR-Ergebnisse
+                    channel.ExchangeDeclare(exchange: "ocr_results", type: ExchangeType.Direct, durable: true, autoDelete: false);
+                    channel.QueueBind(queue: "ocr_result_queue", exchange: "ocr_results", routingKey: "ocr_result");
 
                     consumer = new EventingBasicConsumer(channel);
                     consumer.Received += async (model, ea) =>
@@ -108,14 +113,15 @@ namespace DMS_OCR
 
                             // Parsen der Nachricht (angenommen JSON)
                             var ocrMessage = JsonConvert.DeserializeObject<OcrMessage>(message);
-                            if (ocrMessage == null || string.IsNullOrEmpty(ocrMessage.FileName))
+                            if (ocrMessage == null || string.IsNullOrEmpty(ocrMessage.FileName) || string.IsNullOrEmpty(ocrMessage.Id))
                             {
-                                Console.WriteLine("[!] Ungültige Nachricht: Datei-Name fehlt.");
+                                Console.WriteLine("[!] Ungültige Nachricht: Datei-Name oder ID fehlt.");
                                 return;
                             }
 
                             string fileName = ocrMessage.FileName;
                             string title = ocrMessage.Title;
+                            string id = ocrMessage.Id; // Stellen Sie sicher, dass die ID vorhanden ist
                             Console.WriteLine($"[>] Verarbeite Datei: {fileName} mit Titel: {title}");
 
                             // Herunterladen der Datei von MinIO
@@ -126,11 +132,8 @@ namespace DMS_OCR
                             string ocrText = OcrProcessor.PerformOcr(tempFilePath);
                             Console.WriteLine($"[+] OCR-Ergebnis für {fileName}:\n{ocrText}");
 
-                            // Optional: Speichern des OCR-Ergebnisses, Senden an eine andere Queue etc.
-                            // Beispiel: Speichern in eine Textdatei neben der Originaldatei
-                            string ocrFilePath = Path.ChangeExtension(tempFilePath, ".txt");
-                            File.WriteAllText(ocrFilePath, ocrText);
-                            Console.WriteLine($"[+] OCR-Ergebnis gespeichert unter: {ocrFilePath}");
+                            // Ergebnis an RabbitMQ senden
+                            SendOcrResultToRabbitMq(id, ocrText, channel);
 
                             // Bereinigung der temporären Datei
                             File.Delete(tempFilePath);
@@ -163,7 +166,8 @@ namespace DMS_OCR
                     channel?.Close();
                     connection?.Close();
                 }
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 Console.WriteLine($"[!] Unbehandelte Ausnahme im Hauptbereich: {ex.Message}");
                 Console.WriteLine(ex.StackTrace);
@@ -175,7 +179,7 @@ namespace DMS_OCR
             /// <param name="fileName">Der Name der Datei in MinIO.</param>
             /// <param name="destinationPath">Der lokale Pfad, wo die Datei gespeichert werden soll.</param>
             /// <returns></returns>
-             static async Task DownloadFileFromMinioAsync(string fileName, string destinationPath)
+            static async Task DownloadFileFromMinioAsync(string fileName, string destinationPath)
             {
                 try
                 {
@@ -198,6 +202,48 @@ namespace DMS_OCR
                     throw;
                 }
             }
+
+            /// <summary>
+            /// Sendet das OCR-Ergebnis zurück an RabbitMQ.
+            /// </summary>
+            /// <param name="id">Die ID des Dokuments.</param>
+            /// <param name="ocrText">Das OCR-Ergebnis.</param>
+            /// <param name="channel">Das RabbitMQ-Kanalobjekt.</param>
+            static void SendOcrResultToRabbitMq(string id, string ocrText, IModel channel)
+            {
+                try
+                {
+                    var resultMessage = new OcrResultMessage
+                    {
+                        Id = id,
+                        Content = ocrText
+                    };
+
+                    var messageBody = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(resultMessage));
+
+                    channel.BasicPublish(exchange: "ocr_results",
+                                         routingKey: "ocr_result",
+                                         basicProperties: null,
+                                         body: messageBody);
+
+                    Console.WriteLine($"[>] OCR-Ergebnis an RabbitMQ gesendet für ID: {id}");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"[!] Fehler beim Senden des OCR-Ergebnisses an RabbitMQ: {ex.Message}");
+                    Console.WriteLine(ex.StackTrace);
+                    // Optional: Fehlerbehandlung implementieren
+                }
+            }
+        }
+
+        /// <summary>
+        /// Klasse zur Darstellung der OCR-Ergebnis-Nachricht
+        /// </summary>
+        public class OcrResultMessage
+        {
+            public string Id { get; set; }
+            public string Content { get; set; }
         }
     }
 }

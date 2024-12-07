@@ -7,5 +7,7 @@ namespace DMS_REST_API.Services
         void PublishDocumentCreated(DocumentDto document);
         void PublishDocumentUpdated(DocumentDto document);
         void PublishDocumentDeleted(int documentId);
+        
+        
     }
 }

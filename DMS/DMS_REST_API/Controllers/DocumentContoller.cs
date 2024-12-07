@@ -27,25 +27,23 @@ namespace DMS_REST_API.Controllers
         private readonly IMinioClient _minioClient; 
         private const string BucketName = "uploads";
 
-
         public DocumentController(
             IDocumentRepository repository,
             IMapper mapper,
             ILogger<DocumentController> logger,
             IRabbitMQPublisher rabbitMQPublisher)
         {
-          
+            _repository = repository;
+            _mapper = mapper;
+            _logger = logger;
+            _rabbitMQPublisher = rabbitMQPublisher;
 
+            // Initialisieren des MinIO-Clients
             _minioClient = new MinioClient()
                 .WithEndpoint("minio", 9000) // 'minio' als Servicename in docker-compose.yml
                 .WithCredentials("your-access-key", "your-secret-key") // Muss mit docker-compose.yml übereinstimmen
                 .WithSSL(false)
                 .Build();
-
-            _repository = repository;
-            _mapper = mapper;
-            _logger = logger;
-            _rabbitMQPublisher = rabbitMQPublisher;
         }
 
         /// <summary>
@@ -97,12 +95,16 @@ namespace DMS_REST_API.Controllers
             }
         }
 
+        /// <summary>
+        /// Stellt sicher, dass der MinIO-Bucket existiert.
+        /// </summary>
         private async Task EnsureBucketExists()
         {
             bool found = await _minioClient.BucketExistsAsync(new BucketExistsArgs().WithBucket(BucketName));
             if (!found)
             {
                 await _minioClient.MakeBucketAsync(new MakeBucketArgs().WithBucket(BucketName));
+                _logger.LogInformation("Bucket '{Bucket}' erstellt.", BucketName);
             }
         }
         
@@ -111,111 +113,115 @@ namespace DMS_REST_API.Controllers
         /// </summary>
         /// <param name="uploadDto">Die hochzuladende Datei sowie Titel und Typ des Dokuments.</param>
         /// <returns>Details des hochgeladenen Dokuments.</returns>
-       [HttpPost("upload")]
-[Consumes("multipart/form-data")]
-public async Task<IActionResult> UploadFile([FromForm] DocumentUploadDto uploadDto)
-{
-    _logger.LogInformation("UploadFile-Methode aufgerufen.");
-
-    // Validierung der Eingabedaten
-    if (!ModelState.IsValid)
-    {
-        _logger.LogWarning("Model-Validierung für UploadFile fehlgeschlagen: {ModelState}", ModelState);
-
-        // Detaillierte Fehler in die Logs schreiben
-        foreach (var key in ModelState.Keys)
+        [HttpPost("upload")]
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> UploadFile([FromForm] DocumentUploadDto uploadDto)
         {
-            var errors = ModelState[key].Errors;
-            foreach (var error in errors)
+            _logger.LogInformation("UploadFile-Methode aufgerufen.");
+
+            // Validierung der Eingabedaten
+            if (!ModelState.IsValid)
             {
-                _logger.LogWarning("Model-Validation error for key '{Key}': {Error}", key, error.ErrorMessage);
+                _logger.LogWarning("Model-Validierung für UploadFile fehlgeschlagen: {ModelState}", ModelState);
+
+                // Detaillierte Fehler in die Logs schreiben
+                foreach (var key in ModelState.Keys)
+                {
+                    var errors = ModelState[key].Errors;
+                    foreach (var error in errors)
+                    {
+                        _logger.LogWarning("Model-Validation error for key '{Key}': {Error}", key, error.ErrorMessage);
+                    }
+                }
+
+                return BadRequest(ModelState);
+            }
+
+            // Zusätzliche Validierungen (optional, da [Required] bereits gesetzt sind)
+            if (uploadDto.File == null || uploadDto.File.Length == 0)
+            {
+                _logger.LogWarning("Keine Datei zum Hochladen erhalten.");
+                return BadRequest("Datei fehlt!");
+            }
+
+            if (string.IsNullOrWhiteSpace(uploadDto.Title))
+            {
+                _logger.LogWarning("Dokumenttitel fehlt.");
+                return BadRequest("Dokumenttitel fehlt!");
+            }
+
+            if (string.IsNullOrWhiteSpace(uploadDto.FileType))
+            {
+                _logger.LogWarning("Dokumenttyp fehlt.");
+                return BadRequest("Dokumenttyp fehlt!");
+            }
+
+            await EnsureBucketExists();
+
+            var fileName = Path.GetFileName(uploadDto.File.FileName);
+            await using var fileStream = uploadDto.File.OpenReadStream();
+
+            try
+            {
+                // Datei zu MinIO hochladen
+                await _minioClient.PutObjectAsync(new PutObjectArgs()
+                    .WithBucket(BucketName)
+                    .WithObject(fileName)
+                    .WithStreamData(fileStream)
+                    .WithObjectSize(uploadDto.File.Length));
+
+                _logger.LogInformation("Datei {FileName} erfolgreich hochgeladen.", fileName);
+
+                // Dokumententität ohne Content erstellen
+                var document = new Document
+                {
+                    Title = uploadDto.Title,
+                    FileType = uploadDto.FileType,
+                    FileName = fileName,
+                    Content = "OCR wird verarbeitet..." // Wird später durch den Listener-Service aktualisiert
+                };
+
+                // Dokument in die Datenbank einfügen, um die ID zu erhalten
+                await _repository.AddDocumentAsync(document);
+                _logger.LogInformation("Dokumententität ohne Content in die Datenbank eingefügt mit ID {DocumentId}.", document.Id);
+
+                // Nachricht an RabbitMQ senden, um den OCR-Prozess zu initiieren
+                try
+                {
+                    var createdDto = _mapper.Map<DocumentDto>(document);
+                    _logger.LogInformation("Sende OCR-Anfrage für Dokument {DocumentId}.", document.Id);
+
+                    // Nachricht an RabbitMQ senden
+                    _rabbitMQPublisher.PublishDocumentCreated(createdDto);
+                    _logger.LogInformation("OCR-Anfrage an RabbitMQ gesendet für Dokument ID {DocumentId}.", document.Id);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Fehler beim Senden der 'Created'-Nachricht an RabbitMQ.");
+                    // Optional: Sie könnten hier weitere Schritte unternehmen, z.B. den Upload rückgängig machen
+                }
+
+                // Rückgabe der Dokumentdetails ohne Content (wird später vom Listener-Service aktualisiert)
+                return CreatedAtAction(nameof(GetById), new { id = document.Id }, new 
+                { 
+                    document.Id, 
+                    document.Title, 
+                    document.FileType, 
+                    document.FileName,
+                    Content = "OCR wird verarbeitet..."
+                });
+            }
+            catch (Minio.Exceptions.MinioException ex)
+            {
+                _logger.LogError(ex, "MinIO Fehler beim Hochladen der Datei {FileName}.", fileName);
+                return StatusCode(500, "Interner Serverfehler beim Hochladen der Datei.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Allgemeiner Fehler beim Hochladen der Datei {FileName}.", fileName);
+                return StatusCode(500, "Interner Serverfehler beim Hochladen der Datei.");
             }
         }
-
-        return BadRequest(ModelState);
-    }
-
-    // Zusätzliche Validierungen (optional, da [Required] bereits gesetzt sind)
-    if (uploadDto.File == null || uploadDto.File.Length == 0)
-    {
-        _logger.LogWarning("Keine Datei zum Hochladen erhalten.");
-        return BadRequest("Datei fehlt!");
-    }
-
-    if (string.IsNullOrWhiteSpace(uploadDto.Title))
-    {
-        _logger.LogWarning("Dokumenttitel fehlt.");
-        return BadRequest("Dokumenttitel fehlt!");
-    }
-
-    if (string.IsNullOrWhiteSpace(uploadDto.FileType))
-    {
-        _logger.LogWarning("Dokumenttyp fehlt.");
-        return BadRequest("Dokumenttyp fehlt!");
-    }
-
-    await EnsureBucketExists();
-
-    var fileName = Path.GetFileName(uploadDto.File.FileName);
-    await using var fileStream = uploadDto.File.OpenReadStream();
-
-    try
-    {
-        // Datei zu MinIO hochladen
-        await _minioClient.PutObjectAsync(new PutObjectArgs()
-            .WithBucket(BucketName)
-            .WithObject(fileName)
-            .WithStreamData(fileStream)
-            .WithObjectSize(uploadDto.File.Length));
-
-        _logger.LogInformation("Datei {FileName} erfolgreich hochgeladen.", fileName);
-
-        // Dokumententität erstellen
-        var document = new Document
-        {
-            Title = uploadDto.Title,
-            FileType = uploadDto.FileType,
-            FileName = fileName,
-            // Optional: Weitere Felder wie UploadDate hinzufügen
-        };
-
-        // Dokument in die Datenbank einfügen
-        await _repository.AddDocumentAsync(document);
-
-        // Nachricht an RabbitMQ senden
-        try
-        {
-            var createdDto = _mapper.Map<DocumentDto>(document);
-            _rabbitMQPublisher.PublishDocumentCreated(createdDto);
-            _logger.LogInformation("Dokument erfolgreich erstellt mit ID {DocumentId}.", document.Id);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Fehler beim Senden der 'Created'-Nachricht an RabbitMQ.");
-        }
-
-        // Rückgabe der Dokumentdetails
-        return CreatedAtAction(nameof(GetById), new { id = document.Id }, new 
-        { 
-            document.Id, 
-            document.Title, 
-            document.FileType, 
-            document.FileName 
-        });
-    }
-    catch (Minio.Exceptions.MinioException ex)
-    {
-        _logger.LogError(ex, "MinIO Fehler beim Hochladen der Datei {FileName}.", fileName);
-        return StatusCode(500, "Interner Serverfehler beim Hochladen der Datei.");
-    }
-    catch (Exception ex)
-    {
-        _logger.LogError(ex, "Allgemeiner Fehler beim Hochladen der Datei {FileName}.", fileName);
-        return StatusCode(500, "Interner Serverfehler beim Hochladen der Datei.");
-    }
-}
-
-
 
         /// <summary>
         /// Erstellt ein neues Dokument.
@@ -241,23 +247,36 @@ public async Task<IActionResult> UploadFile([FromForm] DocumentUploadDto uploadD
 
             try
             {
-                _logger.LogInformation("Erstelle neues Dokument.");
+                // Dokumententität ohne Content erstellen
                 var document = _mapper.Map<Document>(dtoItem);
                 await _repository.AddDocumentAsync(document);
-                var createdDto = _mapper.Map<DocumentDto>(document);
+                _logger.LogInformation("Dokumententität ohne Content in die Datenbank eingefügt mit ID {DocumentId}.", document.Id);
 
-                // Nachricht an RabbitMQ senden
+                // Nachricht an RabbitMQ senden, um den OCR-Prozess zu initiieren
                 try
                 {
+                    var createdDto = _mapper.Map<DocumentDto>(document);
+                    _logger.LogInformation("Sende OCR-Anfrage für Dokument {DocumentId}.", document.Id);
+
+                    // Nachricht an RabbitMQ senden
                     _rabbitMQPublisher.PublishDocumentCreated(createdDto);
-                    _logger.LogInformation("Dokument erfolgreich erstellt mit ID {DocumentId}.", createdDto.Id);
+                    _logger.LogInformation("OCR-Anfrage an RabbitMQ gesendet für Dokument ID {DocumentId}.", document.Id);
                 }
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, "Fehler beim Senden der 'Created'-Nachricht an RabbitMQ.");
+                    // Optional: Sie könnten hier weitere Schritte unternehmen, z.B. den Upload rückgängig machen
                 }
 
-                return CreatedAtAction(nameof(GetById), new { id = createdDto.Id }, createdDto);
+                // Rückgabe der Dokumentdetails ohne Content (wird später vom Listener-Service aktualisiert)
+                return CreatedAtAction(nameof(GetById), new { id = document.Id }, new 
+                { 
+                    document.Id, 
+                    document.Title, 
+                    document.FileType, 
+                    document.FileName,
+                    Content = "OCR wird verarbeitet..."
+                });
             }
             catch (Exception ex)
             {
@@ -303,23 +322,30 @@ public async Task<IActionResult> UploadFile([FromForm] DocumentUploadDto uploadD
                     return NotFound(new { message = $"Dokument mit ID {id} wurde nicht gefunden." });
                 }
 
-                // Aktualisieren der Eigenschaften
+                // Aktualisieren der Eigenschaften ohne Content
                 existingDocument.Title = dtoItem.Title;
                 existingDocument.FileType = dtoItem.FileType;
 
                 await _repository.UpdateDocumentAsync(existingDocument);
+                _logger.LogInformation("Dokumententität ohne Content aktualisiert für ID {Id}.", id);
 
-                // Nachricht an RabbitMQ senden
+                // Nachricht an RabbitMQ senden, um den OCR-Prozess zu initiieren
                 try
                 {
-                    _rabbitMQPublisher.PublishDocumentUpdated(dtoItem);
-                    _logger.LogInformation("Dokument erfolgreich aktualisiert mit ID {DocumentId}.", dtoItem.Id);
+                    var createdDto = _mapper.Map<DocumentDto>(existingDocument);
+                    _logger.LogInformation("Sende OCR-Anfrage für Dokument {DocumentId}.", existingDocument.Id);
+
+                    // Nachricht an RabbitMQ senden
+                    _rabbitMQPublisher.PublishDocumentCreated(createdDto);
+                    _logger.LogInformation("OCR-Anfrage an RabbitMQ gesendet für Dokument ID {DocumentId}.", existingDocument.Id);
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Fehler beim Senden der 'Updated'-Nachricht an RabbitMQ.");
+                    _logger.LogError(ex, "Fehler beim Senden der 'Created'-Nachricht an RabbitMQ.");
+                    // Optional: Weitere Schritte unternehmen
                 }
 
+                // Rückgabe der Dokumentdetails ohne Content (wird später vom Listener-Service aktualisiert)
                 return NoContent();
             }
             catch (Exception ex)
@@ -348,6 +374,7 @@ public async Task<IActionResult> UploadFile([FromForm] DocumentUploadDto uploadD
                 }
 
                 await _repository.DeleteDocumentAsync(id);
+                _logger.LogInformation("Dokumententität gelöscht für ID {Id}.", id);
 
                 // Nachricht an RabbitMQ senden
                 try

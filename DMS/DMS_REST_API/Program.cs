@@ -54,6 +54,7 @@ builder.Services.AddScoped<IDocumentRepository, DocumentRepository>();
 builder.Services.AddSingleton<IRabbitMQPublisher, RabbitMQPublisher>();
 
 // Hosted Services registrieren (optional)
+builder.Services.AddHostedService<RabbitMqListenerService>();
 
 
 var app = builder.Build();

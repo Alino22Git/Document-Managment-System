@@ -8,5 +8,6 @@ namespace DMS_DAL.Entities
         public string Title { get; set; }
         public string FileType { get; set; }
         public string FileName { get; set; }
+        public string Content { get; set; }
     }
 }
