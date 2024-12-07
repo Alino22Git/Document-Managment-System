@@ -1,171 +1,188 @@
 ﻿// URL der API
 const apiUrl = 'api/document';
 
-// Funktion zum Abrufen und Anzeigen der API-Daten in der Tabelle
-function fetchDocuments() {
-    fetch(apiUrl)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP-Fehler! Status: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            const tableBody = document.getElementById('apiTableBody');
-            tableBody.innerHTML = ''; // Tabelle leeren bevor neue Daten eingefügt werden
+// Daten beim Laden der Seite abrufen
+document.addEventListener('DOMContentLoaded', () => {
+    fetchDocuments();
 
-            data.forEach(item => {
-                const row = document.createElement('tr');
+    // Event-Listener für das Formular
+    document.getElementById('uploadForm').onsubmit = async (e) => {
+        e.preventDefault();
 
-                const idCell = document.createElement('td');
-                idCell.textContent = item.id;
-                row.appendChild(idCell);
+        const titleInput = document.getElementById('titleInput');
+        const fileTypeInput = document.getElementById('fileTypeInput');
+        const fileInput = document.getElementById('fileInput');
 
-                const titleCell = document.createElement('td');
-                titleCell.textContent = item.title;
-                row.appendChild(titleCell);
+        const title = titleInput.value.trim();
+        const fileType = fileTypeInput.value.trim();
+        const file = fileInput.files[0];
+        
+        if (!title) {
+            alert('Bitte geben Sie einen Titel ein!');
+            return;
+        }
 
-                const fileTypeCell = document.createElement('td');
-                fileTypeCell.textContent = item.fileType;
-                row.appendChild(fileTypeCell);
+        if (!fileType) {
+            alert('Bitte geben Sie einen Dateityp ein!');
+            return;
+        }
 
-                // Aktionen-Zelle
-                const actionsCell = document.createElement('td');
+        if (!file) {
+            alert('Bitte wählen Sie eine Datei aus!');
+            return;
+        }
 
-                // Bearbeiten-Schaltfläche
-                const editButton = document.createElement('button');
-                editButton.textContent = 'Bearbeiten';
-                editButton.classList.add('btn', 'btn-sm', 'btn-warning', 'mr-1');
-                editButton.onclick = () => {
-                    // Prompt für den neuen Titel
-                    const newTitle = prompt('Bitte geben Sie den neuen Titel ein:', item.title);
+        const formData = new FormData();
+        formData.append('Title', title);
+        formData.append('FileType', fileType);
+        formData.append('File', file);
 
-                    // Optional: Prompt für den neuen Dateityp (falls auch geändert werden soll)
-                    // const newFileType = prompt('Bitte geben Sie den neuen Dateityp ein:', item.fileType);
-
-                    if (newTitle !== null) {
-                        // Wenn nur der Titel geändert wird und FileType unverändert bleibt
-                        const updatedData = {
-                            id: item.id,
-                            title: newTitle,
-                            fileType: item.fileType // Unveränderte FileType
-                        };
-
-                        /*
-                        // Wenn auch der Dateityp geändert werden soll
-                        if (newFileType !== null) {
-                            updatedData.fileType = newFileType;
-                        }
-                        */
-
-                        updateDocument(item.id, updatedData);
-                    }
-                }
-                actionsCell.appendChild(editButton);
-
-                // Löschen-Schaltfläche
-                const deleteButton = document.createElement('button');
-                deleteButton.textContent = 'Löschen';
-                deleteButton.classList.add('btn', 'btn-sm', 'btn-danger');
-                deleteButton.onclick = () => {
-                    if (confirm(`Möchten Sie das Dokument "${item.title}" wirklich löschen?`)) {
-                        deleteDocument(item.id);
-                    }
-                };
-                actionsCell.appendChild(deleteButton);
-
-                // Aktionen-Zelle zur Zeile hinzufügen
-                row.appendChild(actionsCell);
-
-                tableBody.appendChild(row);
+        try {
+            const response = await fetch(`api/document/upload`, {
+                method: 'POST',
+                body: formData,
             });
 
-        })
-        .catch(error => {
-            console.error('Fehler beim Abrufen der API-Daten:', error);
-            alert('Fehler beim Laden der Daten. Bitte versuchen Sie es später erneut.');
+            if (!response.ok) {
+                const errorData = await response.json();
+                // Extrahieren Sie die spezifischen Fehlermeldungen
+                let errorMessage = 'Fehler beim Hochladen.';
+                if (errorData && errorData.errors) {
+                    errorMessage = Object.values(errorData.errors).flat().join(' ');
+                } else if (errorData && errorData.message) {
+                    errorMessage = errorData.message;
+                }
+                throw new Error(errorMessage);
+            }
+
+            const result = await response.json();
+            document.getElementById('uploadStatus').innerText = `Erfolgreich hochgeladen: ${result.fileName}`;
+            // Formular zurücksetzen
+            document.getElementById('uploadForm').reset();
+            fetchDocuments();
+        } catch (error) {
+            console.error('Fehler beim Hochladen:', error);
+            document.getElementById('uploadStatus').innerText = `Fehler beim Hochladen: ${error.message}`;
+        }
+    };
+});
+
+// Funktion zum Abrufen und Anzeigen der API-Daten in der Tabelle
+async function fetchDocuments() {
+    try {
+        const response = await fetch(apiUrl);
+        if (!response.ok) {
+            throw new Error(`HTTP-Fehler! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        const tableBody = document.getElementById('apiTableBody');
+        tableBody.innerHTML = ''; // Tabelle leeren bevor neue Daten eingefügt werden
+
+        data.forEach((item) => {
+            const row = document.createElement('tr');
+
+            const idCell = document.createElement('td');
+            idCell.textContent = item.id;
+            row.appendChild(idCell);
+
+            const titleCell = document.createElement('td');
+            titleCell.textContent = item.title;
+            row.appendChild(titleCell);
+
+            const fileTypeCell = document.createElement('td');
+            fileTypeCell.textContent = item.fileType;
+            row.appendChild(fileTypeCell);
+
+            // Aktionen-Zelle
+            const actionsCell = document.createElement('td');
+
+            // Bearbeiten-Schaltfläche
+            const editButton = document.createElement('button');
+            editButton.textContent = 'Bearbeiten';
+            editButton.classList.add('btn', 'btn-sm', 'btn-warning', 'mr-1');
+            editButton.onclick = () => editDocument(item.id, item.title, item.fileType);
+            actionsCell.appendChild(editButton);
+
+            // Löschen-Schaltfläche
+            const deleteButton = document.createElement('button');
+            deleteButton.textContent = 'Löschen';
+            deleteButton.classList.add('btn', 'btn-sm', 'btn-danger');
+            deleteButton.onclick = () => deleteDocument(item.id);
+            actionsCell.appendChild(deleteButton);
+
+            row.appendChild(actionsCell);
+
+            tableBody.appendChild(row);
         });
+    } catch (error) {
+        console.error('Fehler beim Abrufen der API-Daten:', error);
+        alert('Fehler beim Laden der Daten. Bitte versuchen Sie es später erneut.');
+    }
 }
 
-// Funktion zum Hinzufügen eines neuen Dokuments
-function addDocument() {
-    const documentTitle = document.getElementById('documentTitle').value;
-    const documentType = document.getElementById('documentType').value;
+// Funktion zum Bearbeiten eines Dokuments
+function editDocument(id, title, fileType) {
+    const newTitle = prompt('Bitte geben Sie den neuen Titel ein:', title);
+    const newFileType = prompt('Bitte geben Sie den neuen Dateityp ein:', fileType);
 
-    if (documentTitle.trim() === '' || documentType.trim() === '') {
-        alert('Bitte geben Sie sowohl einen Titel als auch einen Dateityp ein.');
-        //return;
+    if (newTitle !== null && newFileType !== null) {
+        const updatedData = {
+            id: id,
+            title: newTitle.trim(),
+            fileType: newFileType.trim(),
+        };
+
+        updateDocument(id, updatedData);
     }
-
-    const newDoc = {
-        id: 0, // Backend wird die ID generieren
-        title: documentTitle,
-        fileType: documentType,
-    };
-
-    console.log("Neues Dokument:", newDoc);
-
-    fetch(apiUrl, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(newDoc)
-    })
-        .then(response => {
-            if (response.ok) {
-                fetchDocuments(); // Aktualisieren Sie die Liste nach dem Hinzufügen
-                document.getElementById('documentTitle').value = '';
-                document.getElementById('documentType').value = ''; // Eingabefelder leeren
-            } else {
-                response.json().then(err => {
-                    alert("Fehler: " + err.title + err.message);
-                    console.error('Fehler beim Hinzufügen des Dokuments:', err);
-                });
-            }
-        })
-        .catch(error => console.error('Fehler:', error));
 }
 
 // Funktion zum Aktualisieren eines Dokuments
-function updateDocument(documentId, updatedData) {
-    fetch(`${apiUrl}/${documentId}`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(updatedData)
-    })
-        .then(response => {
-            if (response.ok) {
-                fetchDocuments(); // Aktualisieren Sie die Liste nach dem Aktualisieren
-            } else {
-                response.json().then(err => {
-                    alert("Fehler: " + err.title);
-                    console.error('Fehler beim Aktualisieren des Dokuments:', err);
-                });
+async function updateDocument(documentId, updatedData) {
+    try {
+        const response = await fetch(`${apiUrl}/${documentId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(updatedData),
+        });
+
+        if (response.ok) {
+            fetchDocuments(); // Aktualisieren Sie die Liste nach dem Aktualisieren
+        } else {
+            const errorData = await response.json();
+            let errorMessage = 'Fehler beim Aktualisieren.';
+            if (errorData && errorData.message) {
+                errorMessage = errorData.message;
             }
-        })
-        .catch(error => console.error('Fehler:', error));
+            alert(`Fehler: ${errorMessage}`);
+        }
+    } catch (error) {
+        console.error('Fehler beim Aktualisieren des Dokuments:', error);
+    }
 }
 
 // Funktion zum Löschen eines Dokuments
-function deleteDocument(documentId) {
-    fetch(`${apiUrl}/${documentId}`, {
-        method: 'DELETE'
-    })
-        .then(response => {
-            if (response.ok) {
-                fetchDocuments(); // Aktualisieren Sie die Liste nach dem Löschen
-            } else {
-                response.json().then(err => {
-                    alert("Fehler: " + err.title);
-                    console.error('Fehler beim Löschen des Dokuments:', err);
-                });
-            }
-        })
-        .catch(error => console.error('Fehler:', error));
-}
+async function deleteDocument(documentId) {
+    if (!confirm('Möchten Sie dieses Dokument wirklich löschen?')) return;
 
-// Daten beim Laden der Seite abrufen
-document.addEventListener('DOMContentLoaded', fetchDocuments);
+    try {
+        const response = await fetch(`${apiUrl}/${documentId}`, {
+            method: 'DELETE',
+        });
+
+        if (response.ok) {
+            fetchDocuments(); // Aktualisieren Sie die Liste nach dem Löschen
+        } else {
+            const errorData = await response.json();
+            let errorMessage = 'Fehler beim Löschen.';
+            if (errorData && errorData.message) {
+                errorMessage = errorData.message;
+            }
+            alert(`Fehler: ${errorMessage}`);
+        }
+    } catch (error) {
+        console.error('Fehler beim Löschen des Dokuments:', error);
+    }
+}

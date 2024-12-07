@@ -10,12 +10,13 @@
     <link rel="stylesheet" href="/site.css">
 </head>
 <body>
-<div class="container">
-    <h1>Dashboard</h1>
+<div class="container my-4">
+    <h1 class="mb-4">Dashboard</h1>
     <p>Willkommen zu Ihrem einfachen123 Dashboard.</p>
 
-    <table class="table">
-        <thead>
+    <!-- Tabelle für Dokumente -->
+    <table class="table table-striped">
+        <thead class="thead-dark">
         <tr>
             <th>ID</th>
             <th>Titel</th>
@@ -27,26 +28,31 @@
         <!-- Hier werden die API-Daten eingefügt -->
         </tbody>
     </table>
-
 </div>
 
-<div class="container">
-    <ul id="Documents"></ul>
-</div>
-<div class="container">
-    <h3>Add New Doc</h3>
-    <div class="form-group">
-        <input type="text" id="documentTitle" class="form-control" placeholder="Document Title">
-    </div>
-    <div class="form-group">
-        <input type="text" id="documentType" class="form-control" placeholder="Document Type">
-    </div>
-    <button class="btn btn-primary" onclick="addDocument()">Add Doc</button>
+<div class="container my-4">
+    <h3>Neues Dokument hinzufügen</h3>
+    <form id="uploadForm">
+        <div class="form-group">
+            <label for="titleInput">Titel</label>
+            <input type="text" id="titleInput" class="form-control" placeholder="Dokumenttitel" required>
+        </div>
+        <div class="form-group">
+            <label for="fileTypeInput">Dateityp</label>
+            <input type="text" id="fileTypeInput" class="form-control" placeholder="Dateityp (z.B. PDF)" required>
+        </div>
+        <div class="form-group">
+            <label for="fileInput">Datei hochladen</label>
+            <input type="file" id="fileInput" class="form-control-file" accept="application/pdf" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Dokument hinzufügen</button>
+    </form>
+    <p id="uploadStatus"></p>
 </div>
 
-<div class="container">
-    <h3>Reload Doc</h3>
-    <button class="btn btn-secondary" onclick="fetchDocuments()">Fetch Docs</button>
+<div class="container my-4">
+    <h3>Dokumente neu laden</h3>
+    <button class="btn btn-secondary" onclick="fetchDocuments()">Daten aktualisieren</button>
 </div>
 
 <!-- jQuery und Bootstrap JS einbinden -->

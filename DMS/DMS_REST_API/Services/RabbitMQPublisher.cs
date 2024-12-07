@@ -1,9 +1,9 @@
-﻿﻿using RabbitMQ.Client;
+﻿using RabbitMQ.Client;
 using DMS_REST_API.DTO;
 using System.Text.Json;
 using System.Text;
 using DMS_REST_API.Services;
-
+using Microsoft.Extensions.Logging;
 
 public class RabbitMQPublisher : IRabbitMQPublisher, IDisposable
 {
@@ -33,7 +33,6 @@ public class RabbitMQPublisher : IRabbitMQPublisher, IDisposable
             _connection = factory.CreateConnection();
             _channel = _connection.CreateModel();
 
-           
             _channel.ExchangeDeclare(ExchangeName, ExchangeType.Direct, durable: true);
 
             // create queues for each event type
@@ -71,14 +70,18 @@ public class RabbitMQPublisher : IRabbitMQPublisher, IDisposable
     {
         try
         {
-            // convert document to JSON and then to byte array for transmission over RabbitMQ
+            // Convert document to JSON and then to byte array for transmission over RabbitMQ
             var message = JsonSerializer.Serialize(document);
             var body = Encoding.UTF8.GetBytes(message);
+
+            // Set message as persistent
+            var properties = _channel.CreateBasicProperties();
+            properties.Persistent = true;
 
             _channel.BasicPublish(
                 exchange: ExchangeName,
                 routingKey: "created",
-                basicProperties: null,
+                basicProperties: properties,
                 body: body);
 
             _logger.LogInformation(DocumentEventTemplate, "created", document.Id);
@@ -97,10 +100,14 @@ public class RabbitMQPublisher : IRabbitMQPublisher, IDisposable
             var message = JsonSerializer.Serialize(document);
             var body = Encoding.UTF8.GetBytes(message);
 
+            // Set message as persistent
+            var properties = _channel.CreateBasicProperties();
+            properties.Persistent = true;
+
             _channel.BasicPublish(
                 exchange: ExchangeName,
                 routingKey: "updated",
-                basicProperties: null,
+                basicProperties: properties,
                 body: body);
 
             _logger.LogInformation(DocumentEventTemplate, "updated", document.Id);
@@ -119,10 +126,14 @@ public class RabbitMQPublisher : IRabbitMQPublisher, IDisposable
             var message = JsonSerializer.Serialize(new { Id = documentId });
             var body = Encoding.UTF8.GetBytes(message);
 
+            // Set message as persistent
+            var properties = _channel.CreateBasicProperties();
+            properties.Persistent = true;
+
             _channel.BasicPublish(
                 exchange: ExchangeName,
                 routingKey: "deleted",
-                basicProperties: null,
+                basicProperties: properties,
                 body: body);
 
             _logger.LogInformation(DocumentEventTemplate, "deleted", documentId);

@@ -1,8 +1,9 @@
-﻿using System;
+﻿// DMS_OCR/OcrProcessor.cs
+using System;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using ImageMagick;
-using Tesseract;
 
 namespace DMS_OCR
 {
@@ -10,41 +11,73 @@ namespace DMS_OCR
     {
         public static string PerformOcr(string filePath)
         {
-            if (!File.Exists(filePath))
+            var stringBuilder = new StringBuilder();
+
+            try
             {
-                throw new FileNotFoundException($"Datei nicht gefunden: {filePath}");
-            }
-
-            var ocrResult = new StringBuilder();
-
-            using (var images = new MagickImageCollection())
-            {
-                images.Read(filePath);
-
-                foreach (var image in images)
+                using (var images = new MagickImageCollection(filePath)) // MagickImageCollection für mehrere Seiten
                 {
-                    using (var memoryStream = new MemoryStream())
+                    foreach (var image in images)
                     {
+                        // Erstellen eines temporären PNG-Dateipfades
+                        var tempPngFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".png");
+
+                        // Bildvorverarbeitung
+                        image.Density = new Density(300, 300); // Setze die Auflösung
+                        // Optional: Weitere Bildbearbeitungen
+                        image.ColorType = ColorType.Grayscale;
+                        image.Contrast();
+                        image.Sharpen();
+                        image.Despeckle();
                         image.Format = MagickFormat.Png;
-                        image.Write(memoryStream);
 
-                        memoryStream.Position = 0;
+                        // Speichern des vorverarbeiteten Bildes als temporäre PNG-Datei
+                        image.Write(tempPngFile);
 
-                        using (var engine = new TesseractEngine(@"./tessdata", "eng", EngineMode.Default))
+                        // Verwenden der Tesseract CLI für die OCR-Verarbeitung
+                        var psi = new ProcessStartInfo
                         {
-                            using (var img = Pix.LoadFromMemory(memoryStream.ToArray()))
+                            FileName = "tesseract",
+                            Arguments = $"{tempPngFile} stdout -l eng",
+                            RedirectStandardOutput = true,
+                            UseShellExecute = false,
+                            CreateNoWindow = true
+                        };
+
+                        using (var process = Process.Start(psi))
+                        {
+                            if (process == null)
                             {
-                                using (var page = engine.Process(img))
-                                {
-                                    ocrResult.Append(page.GetText());
-                                }
+                                throw new InvalidOperationException("Tesseract-Prozess konnte nicht gestartet werden.");
                             }
+
+                            string result = process.StandardOutput.ReadToEnd();
+                            process.WaitForExit();
+
+                            if (process.ExitCode != 0)
+                            {
+                                throw new InvalidOperationException($"Tesseract-Prozess endete mit dem Fehlercode {process.ExitCode}.");
+                            }
+
+                            stringBuilder.Append(result);
                         }
+
+                        // Löschen der temporären PNG-Datei nach der Verarbeitung
+                        File.Delete(tempPngFile);
                     }
                 }
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Fehler bei der OCR-Verarbeitung: {ex.Message}");
+                if (ex.InnerException != null)
+                {
+                    Console.WriteLine($"Innere Ausnahme: {ex.InnerException.Message}");
+                }
+                Console.WriteLine($"Stacktrace: {ex.StackTrace}");
+            }
 
-            return ocrResult.ToString();
+            return stringBuilder.ToString();
         }
     }
 }

@@ -3,9 +3,22 @@ WORKDIR /app
 
 # Installieren von Ghostscript und Abhängigkeiten
 RUN apt-get update && \
-    apt-get install -y libgdiplus libc6-dev libx11-dev libx11-6 libxext6 libxrender-dev libxtst6 libxi6 && \
+    apt-get install -y libgdiplus libc6-dev libx11-dev libx11-6 libxext6 libxrender-dev libxtst6 libxi6  && \
     apt-get install -y ghostscript && \
     rm -rf /var/lib/apt/lists/*
+
+
+# Install required libraries
+RUN apt-get update && apt-get install -y \
+    tesseract-ocr \
+    libleptonica-dev \
+    libtesseract-dev \
+    libc6-dev \
+    libjpeg62-turbo-dev \
+    libgdiplus \
+    ghostscript \
+    libpng-dev 
+
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
