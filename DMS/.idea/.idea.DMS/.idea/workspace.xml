@@ -32,6 +32,7 @@
   <component name="ChangeListManager">
     <list default="true" id="d039b34e-bbb2-4ba7-9af8-85ad4bded8b2" name="Changes" comment="">
       <change afterPath="$PROJECT_DIR$/DMS_OCR/OcrResultMessage.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DMS_REST_API/DTO/DocumentUpdateDto.cs" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/DMS_REST_API/Services/RabbitMqListenerService.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DMS/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DMS/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DMS_DAL/Entities/Document.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DMS_DAL/Entities/Document.cs" afterDir="false" />
@@ -437,7 +438,7 @@
       <workItem from="1730658990713" duration="1462000" />
       <workItem from="1733152683367" duration="2942000" />
       <workItem from="1733582227711" duration="45000" />
-      <workItem from="1733582620256" duration="19371000" />
+      <workItem from="1733582620256" duration="20423000" />
     </task>
     <servers />
   </component>

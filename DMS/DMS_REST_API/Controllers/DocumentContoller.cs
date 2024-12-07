@@ -292,7 +292,7 @@ namespace DMS_REST_API.Controllers
         /// <param name="dtoItem">Die aktualisierten Daten des Dokuments.</param>
         /// <returns>Kein Inhalt bei Erfolg.</returns>
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] DocumentDto dtoItem)
+        public async Task<IActionResult> Update(int id, [FromBody] DocumentUpdateDto dtoItem)
         {
             if (dtoItem == null)
             {
@@ -324,7 +324,6 @@ namespace DMS_REST_API.Controllers
 
                 // Aktualisieren der Eigenschaften ohne Content
                 existingDocument.Title = dtoItem.Title;
-                existingDocument.FileType = dtoItem.FileType;
 
                 await _repository.UpdateDocumentAsync(existingDocument);
                 _logger.LogInformation("Dokumententität ohne Content aktualisiert für ID {Id}.", id);
