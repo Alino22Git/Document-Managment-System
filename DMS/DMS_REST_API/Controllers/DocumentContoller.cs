@@ -13,6 +13,8 @@ using Minio.DataModel.Args;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using System;
+using Elastic.Clients.Elasticsearch;
+using Elastic.Clients.Elasticsearch.Nodes;
 
 namespace DMS_REST_API.Controllers
 {
@@ -26,8 +28,9 @@ namespace DMS_REST_API.Controllers
         private readonly IRabbitMQPublisher _rabbitMQPublisher;
         private readonly IMinioClient _minioClient; 
         private const string BucketName = "uploads";
-
+        private readonly ElasticsearchClient _client;
         public DocumentController(
+            ElasticsearchClient client,
             IDocumentRepository repository,
             IMapper mapper,
             ILogger<DocumentController> logger,
@@ -37,7 +40,7 @@ namespace DMS_REST_API.Controllers
             _mapper = mapper;
             _logger = logger;
             _rabbitMQPublisher = rabbitMQPublisher;
-
+            _client = client;
             // Initialisieren des MinIO-Clients
             _minioClient = new MinioClient()
                 .WithEndpoint("minio", 9000) // 'minio' als Servicename in docker-compose.yml
@@ -66,7 +69,6 @@ namespace DMS_REST_API.Controllers
                 return StatusCode(500, "Interner Serverfehler beim Abrufen der Dokumente.");
             }
         }
-
         /// <summary>
         /// Ruft ein Dokument anhand der ID ab.
         /// </summary>

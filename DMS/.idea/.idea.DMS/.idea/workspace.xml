@@ -37,12 +37,14 @@
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DMS/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DMS/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DMS_DAL/Entities/Document.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DMS_DAL/Entities/Document.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DMS_DAL/Migrations/DMS_ContextModelSnapshot.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DMS_DAL/Migrations/DMS_ContextModelSnapshot.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DMS_OCR/DMS_OCR.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/DMS_OCR/DMS_OCR.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DMS_OCR/OcrMessage.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DMS_OCR/OcrMessage.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DMS_OCR/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DMS_OCR/Program.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DMS_REST_API/Controllers/DocumentContoller.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DMS_REST_API/Controllers/DocumentContoller.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DMS_REST_API/DMS_REST_API.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/DMS_REST_API/DMS_REST_API.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DMS_REST_API/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DMS_REST_API/Program.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DMS_REST_API/Services/IRabbitMQPublisher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DMS_REST_API/Services/IRabbitMQPublisher.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minio_data/.minio.sys/tmp/c3e9145d-23d5-4be2-8ef2-80cfc364430a" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -93,36 +95,38 @@
     <option name="showLibraryContents" value="true" />
     <option name="sortKey" value="BY_TIME_ASCENDING" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;.NET Launch Settings Profile.DMS: IIS Express.executor&quot;: &quot;Run&quot;,
-    &quot;.NET Launch Settings Profile.DMS: http.executor&quot;: &quot;Run&quot;,
-    &quot;.NET Launch Settings Profile.DMS: https.executor&quot;: &quot;Run&quot;,
-    &quot;.NET Project.DMS_OCR.executor&quot;: &quot;Run&quot;,
-    &quot;Docker.DMS_WebUI/Dockerfile.executor&quot;: &quot;Run&quot;,
-    &quot;Docker.docker-compose.yml: Compose Deployment.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;OCR-Worker&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.general&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    ".NET Launch Settings Profile.DMS: IIS Express.executor": "Run",
+    ".NET Launch Settings Profile.DMS: http.executor": "Run",
+    ".NET Launch Settings Profile.DMS: https.executor": "Run",
+    ".NET Project.DMS_OCR.executor": "Run",
+    "Docker.DMS_WebUI/Dockerfile.executor": "Run",
+    "Docker.docker-compose.yml.elasticsearch: Compose Deployment.executor": "Run",
+    "Docker.docker-compose.yml.kibana: Compose Deployment.executor": "Run",
+    "Docker.docker-compose.yml: Compose Deployment.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "OCR-Worker",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.general",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;postgresql&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "postgresql"
     ],
-    &quot;rider.external.source.directories&quot;: [
-      &quot;C:\\Users\\micha\\AppData\\Roaming\\JetBrains\\Rider2024.1\\resharper-host\\DecompilerCache&quot;,
-      &quot;C:\\Users\\micha\\AppData\\Roaming\\JetBrains\\Rider2024.1\\resharper-host\\SourcesCache&quot;,
-      &quot;C:\\Users\\micha\\AppData\\Local\\Symbols\\src&quot;
+    "rider.external.source.directories": [
+      "C:\\Users\\micha\\AppData\\Roaming\\JetBrains\\Rider2024.1\\resharper-host\\DecompilerCache",
+      "C:\\Users\\micha\\AppData\\Roaming\\JetBrains\\Rider2024.1\\resharper-host\\SourcesCache",
+      "C:\\Users\\micha\\AppData\\Local\\Symbols\\src"
     ]
   }
-}</component>
-  <component name="RunManager" selected=".NET Project.DMS_OCR">
+}]]></component>
+  <component name="RunManager" selected="Docker.docker-compose.yml.kibana: Compose Deployment">
     <configuration name="DMS_OCR" type="DotNetProject" factoryName=".NET Project">
       <option name="EXE_PATH" value="" />
       <option name="PROGRAM_PARAMETERS" value="" />
@@ -398,6 +402,34 @@
       <EXTENSION ID="com.jetbrains.rider.docker.debug" isFastModeEnabled="true" isSslEnabled="false" />
       <method v="2" />
     </configuration>
+    <configuration name="docker-compose.yml.elasticsearch: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
+      <deployment type="docker-compose.yml">
+        <settings>
+          <option name="services">
+            <list>
+              <option value="elasticsearch" />
+            </list>
+          </option>
+          <option name="sourceFilePath" value="docker-compose.yml" />
+        </settings>
+      </deployment>
+      <EXTENSION ID="com.jetbrains.rider.docker.debug" isFastModeEnabled="true" isSslEnabled="false" />
+      <method v="2" />
+    </configuration>
+    <configuration name="docker-compose.yml.kibana: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
+      <deployment type="docker-compose.yml">
+        <settings>
+          <option name="services">
+            <list>
+              <option value="kibana" />
+            </list>
+          </option>
+          <option name="sourceFilePath" value="docker-compose.yml" />
+        </settings>
+      </deployment>
+      <EXTENSION ID="com.jetbrains.rider.docker.debug" isFastModeEnabled="true" isSslEnabled="false" />
+      <method v="2" />
+    </configuration>
     <list>
       <item itemvalue=".NET Launch Settings Profile.DMS: http" />
       <item itemvalue=".NET Launch Settings Profile.DMS: https" />
@@ -416,7 +448,15 @@
       <item itemvalue="Docker.DMS/Dockerfile" />
       <item itemvalue="Docker.DMS_WebUI/Dockerfile" />
       <item itemvalue="Docker.docker-compose.yml: Compose Deployment" />
+      <item itemvalue="Docker.docker-compose.yml.elasticsearch: Compose Deployment" />
+      <item itemvalue="Docker.docker-compose.yml.kibana: Compose Deployment" />
     </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Docker.docker-compose.yml.kibana: Compose Deployment" />
+        <item itemvalue="Docker.docker-compose.yml.elasticsearch: Compose Deployment" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -438,7 +478,7 @@
       <workItem from="1730658990713" duration="1462000" />
       <workItem from="1733152683367" duration="2942000" />
       <workItem from="1733582227711" duration="45000" />
-      <workItem from="1733582620256" duration="20423000" />
+      <workItem from="1733582620256" duration="29757000" />
     </task>
     <servers />
   </component>

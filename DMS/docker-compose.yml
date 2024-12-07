@@ -1,6 +1,11 @@
 version: '3.8'
 
 services:
+  
+  
+  
+  
+  
   dms_rest_api:
     image: dms_rest_api
     build:
@@ -90,8 +95,9 @@ services:
       depends_on:
         - minio
         - rabbitmq
-        
-          
+      networks: 
+        - elastic
+        - default
       environment:
         - RABBITMQ_HOST=rabbitmq
         - RABBITMQ_USER=guest
@@ -103,9 +109,42 @@ services:
         - MINIO_SECRET_KEY=your-secret-key
         - MINIO_USE_SSL=false
         - MINIO_BUCKET=uploads
+        - ELASTIC_USERNAME=elastic
+        - ELASTIC_PASSWORD=adminpw
+        - ELASTICSEARCH_HOST=http://elasticsearch:9200
       
+      
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.16.0
+    container_name: elasticsearch
+    ports:
+      - "9200:9200"
+    environment:
+      - xpack.security.enabled=false
+      - discovery.type=single-node
+    volumes:
+      - elasticsearch-data:/data
+    networks:
+      - elastic
+      
+  
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.16.0
+    container_name: kibana
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+    environment:
+      - ELASTICSEARCH_URL=http://localhost:9200
+      
+    networks:
+      - elastic
 
 volumes:
     postgres_data:
-    
-    
+    elasticsearch-data:
+
+networks:
+  elastic:
+    driver: bridge   
