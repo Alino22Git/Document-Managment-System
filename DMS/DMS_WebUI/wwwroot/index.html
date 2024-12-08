@@ -10,26 +10,31 @@
     <link rel="stylesheet" href="/site.css">
 </head>
 <body>
-<div class="container my-4">
-    <h1 class="mb-4">Dashboard</h1>
-    <p>Willkommen zu Ihrem einfachen123 Dashboard.</p>
+    <div class="container my-4">
+        <h1 class="mb-4">Dashboard</h1>
+        <p>Willkommen zu Ihrem einfachen123 Dashboard.</p>
+        
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Search...">
+            <button type="button" onclick="search()">Search</button>
+        </div>
 
-    <!-- Tabelle für Dokumente -->
-    <table class="table table-striped">
-        <thead class="thead-dark">
-            <tr>
-                <th>ID</th>
-                <th>Titel</th>
-                <th>Dateityp</th>
-                <th>Content</th>
-                <th>Aktionen</th>
-            </tr>
-        </thead>
-        <tbody id="apiTableBody">
-        <!-- Hier werden die API-Daten eingefügt -->
-        </tbody>
-    </table>
-</div>
+        <!-- Tabelle für Dokumente -->
+        <table class="table table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Titel</th>
+                    <th>Dateityp</th>
+                    <th>Content</th>
+                    <th>Aktionen</th>
+                </tr>
+            </thead>
+            <tbody id="apiTableBody">
+                <!-- Hier werden die API-Daten eingefügt -->
+            </tbody>
+        </table>
+    </div>
 
 <div class="container my-4">
     <h3>Neues Dokument hinzufügen</h3>

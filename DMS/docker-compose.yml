@@ -19,7 +19,11 @@ services:
     depends_on:
       - dms_dal
       - rabbitmq
+      - elasticsearch
     restart: unless-stopped
+    networks: 
+      - elastic
+      - default
 
   webui:
     image: dms_webui
@@ -33,9 +37,6 @@ services:
       - ./DMS_WebUI/wwwroot:/usr/share/nginx/html     # Statische Dateien korrekt mounten
     depends_on:
       - dms_rest_api
-      - elasticsearch
-    networks:
-      - elastic
  
 
   db:
@@ -127,8 +128,7 @@ services:
       - discovery.type=single-node
     volumes:
       - elasticsearch-data:/data
-    networks:
-      - elastic
+
       
   
   kibana:
@@ -139,15 +139,14 @@ services:
     depends_on:
       - elasticsearch
     environment:
-      - ELASTICSEARCH_HOSTS=http://localhost:9200
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
       - xpack.security.enabled=false
       - xpack.encryptedSavedObjects.enabled=false
       - xpack.reporting.enabled=false
       - xpack.spaces.enabled=false
       - xpack.securitySolution.enabled=false
       - xpack.enterpriseSearch.enabled=false
-    networks:
-      - elastic
+
 
 
 volumes:

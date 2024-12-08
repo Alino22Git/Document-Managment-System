@@ -190,3 +190,67 @@ async function deleteDocument(documentId) {
         console.error('Fehler beim Löschen des Dokuments:', error);
     }
 }
+
+async function search() {
+    try {
+        const searchText = document.getElementById('searchInput').value;
+        //const formData = new FormData();
+        //formData.append('Search', searchText);
+
+        const response = await fetch(`${ apiUrl }/search/fuzzy`, {
+            method: 'POST',
+            body: searchText,
+        });
+        if (!response.ok) {
+            throw new Error(`HTTP-Fehler! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        const tableBody = document.getElementById('apiTableBody');
+        tableBody.innerHTML = ''; // Tabelle leeren bevor neue Daten eingefügt werden
+
+        data.forEach((item) => {
+            const row = document.createElement('tr');
+
+            const idCell = document.createElement('td');
+            idCell.textContent = item.id;
+            row.appendChild(idCell);
+
+            const titleCell = document.createElement('td');
+            titleCell.textContent = item.title;
+            row.appendChild(titleCell);
+
+            const fileTypeCell = document.createElement('td');
+            fileTypeCell.textContent = item.fileType;
+            row.appendChild(fileTypeCell);
+
+            const fileContentCell = document.createElement('td');
+            fileContentCell.textContent = item.content;
+            row.appendChild(fileContentCell);
+
+            // Aktionen-Zelle
+            const actionsCell = document.createElement('td');
+
+            // Bearbeiten-Schaltfläche
+            const editButton = document.createElement('button');
+            editButton.textContent = 'Bearbeiten';
+            editButton.classList.add('btn', 'btn-sm', 'btn-warning', 'mr-1');
+            editButton.onclick = () => editDocument(item.id, item.title, item.fileType);
+            actionsCell.appendChild(editButton);
+
+            // Löschen-Schaltfläche
+            const deleteButton = document.createElement('button');
+            deleteButton.textContent = 'Löschen';
+            deleteButton.classList.add('btn', 'btn-sm', 'btn-danger');
+            deleteButton.onclick = () => deleteDocument(item.id);
+            actionsCell.appendChild(deleteButton);
+
+            row.appendChild(actionsCell);
+
+            tableBody.appendChild(row);
+        });
+    } catch (error) {
+        console.error('Fehler beim Abrufen der API-Daten:', error);
+        alert('Fehler beim Laden der Daten. Bitte versuchen Sie es später erneut.');
+    }
+}

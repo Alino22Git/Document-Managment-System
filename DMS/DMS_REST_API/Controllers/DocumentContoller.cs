@@ -397,21 +397,7 @@ namespace DMS_REST_API.Controllers
             }
         }
 
-        private IActionResult HandleSearchResponse(SearchResponse<Document> response)
-        {
-            if (response.IsValidResponse)
-            {
-                if (response.Documents.Any())
-                {
-                    return Ok(response.Documents);
-                }
-                return NotFound(new { message = "No documents found matching the search term." });
-            }
-
-            return StatusCode(500, new { message = "Failed to search documents", details = response.DebugInformation });
-        }
-
-
+        // Fuzzy-Search with Match(Normalisation)
         [HttpPost("search/fuzzy")]
         public async Task<IActionResult> SearchByFuzzy([FromBody] string searchTerm)
         {
@@ -429,6 +415,21 @@ namespace DMS_REST_API.Controllers
 
             return HandleSearchResponse(response);
         }
+
+        private IActionResult HandleSearchResponse(SearchResponse<Document> response)
+        {
+            if (response.IsValidResponse)
+            {
+                if (response.Documents.Any())
+                {
+                    return Ok(response.Documents);
+                }
+                return NotFound(new { message = "No documents found matching the search term." });
+            }
+
+            return StatusCode(500, new { message = "Failed to search documents", details = response.DebugInformation });
+        }
+
 
     }
 }

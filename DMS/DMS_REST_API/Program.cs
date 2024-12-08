@@ -51,9 +51,14 @@ builder.Services.AddDbContext<DMS_Context>(options =>
 // Repository registrieren
 builder.Services.AddScoped<IDocumentRepository, DocumentRepository>();
 
+
+var elasticUri = builder.Configuration.GetConnectionString("ElasticSearch") ?? "http://elasticsearch:9200";
+builder.Services.AddSingleton(new ElasticsearchClient(new Uri(elasticUri)));
+
+
 // RabbitMQPublisher als IRabbitMQPublisher registrieren
 builder.Services.AddSingleton<IRabbitMQPublisher, RabbitMQPublisher>();
-builder.Services.AddSingleton(new ElasticsearchClient(new Uri("http://localhost:9200")));
+
 // Hosted Services registrieren (optional)
 builder.Services.AddHostedService<RabbitMqListenerService>();
 
