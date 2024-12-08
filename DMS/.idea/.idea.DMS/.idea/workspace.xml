@@ -106,7 +106,7 @@
     "Docker.docker-compose.yml.kibana: Compose Deployment.executor": "Run",
     "Docker.docker-compose.yml: Compose Deployment.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "OCR-Worker",
+    "git-widget-placeholder": "ElasticSearch",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -478,7 +478,7 @@
       <workItem from="1730658990713" duration="1462000" />
       <workItem from="1733152683367" duration="2942000" />
       <workItem from="1733582227711" duration="45000" />
-      <workItem from="1733582620256" duration="29757000" />
+      <workItem from="1733582620256" duration="32193000" />
     </task>
     <servers />
   </component>
