@@ -15,11 +15,12 @@ namespace DMS_REST_API.Mappings
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
                 .ForMember(dest => dest.FileType, opt => opt.MapFrom(src => src.FileType))
+                .ForMember(dest => dest.Content, opt => opt.MapFrom(src => src.Content))
                 .ReverseMap()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
-                .ForMember(dest => dest.FileType, opt => opt.MapFrom(src => src.FileType));
-
+                .ForMember(dest => dest.FileType, opt => opt.MapFrom(src => src.FileType))
+                .ForMember(dest => dest.Content, opt => opt.MapFrom(src => src.Content));
             // Mapping zwischen DocumentUploadDto und Document
             CreateMap<DocumentUploadDto, Document>()
                 .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))

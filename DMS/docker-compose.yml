@@ -33,6 +33,9 @@ services:
       - ./DMS_WebUI/wwwroot:/usr/share/nginx/html     # Statische Dateien korrekt mounten
     depends_on:
       - dms_rest_api
+      - elasticsearch
+    networks:
+      - elastic
  
 
   db:
@@ -136,7 +139,7 @@ services:
     depends_on:
       - elasticsearch
     environment:
-      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - ELASTICSEARCH_HOSTS=http://localhost:9200
       - xpack.security.enabled=false
       - xpack.encryptedSavedObjects.enabled=false
       - xpack.reporting.enabled=false

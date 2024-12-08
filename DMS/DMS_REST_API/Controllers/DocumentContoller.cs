@@ -396,5 +396,39 @@ namespace DMS_REST_API.Controllers
                 return StatusCode(500, "Interner Serverfehler beim Löschen des Dokuments.");
             }
         }
+
+        private IActionResult HandleSearchResponse(SearchResponse<Document> response)
+        {
+            if (response.IsValidResponse)
+            {
+                if (response.Documents.Any())
+                {
+                    return Ok(response.Documents);
+                }
+                return NotFound(new { message = "No documents found matching the search term." });
+            }
+
+            return StatusCode(500, new { message = "Failed to search documents", details = response.DebugInformation });
+        }
+
+
+        [HttpPost("search/fuzzy")]
+        public async Task<IActionResult> SearchByFuzzy([FromBody] string searchTerm)
+        {
+            if (string.IsNullOrWhiteSpace(searchTerm))
+            {
+                return BadRequest(new { message = "Search term cannot be empty" });
+            }
+
+            var response = await _client.SearchAsync<Document>(s => s
+                .Index("documents")
+                .Query(q => q.Match(m => m
+                    .Field(f => f.Content)
+                    .Query(searchTerm)
+                    .Fuzziness(new Fuzziness(2)))));
+
+            return HandleSearchResponse(response);
+        }
+
     }
 }

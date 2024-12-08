@@ -94,6 +94,10 @@ async function fetchDocuments() {
             fileTypeCell.textContent = item.fileType;
             row.appendChild(fileTypeCell);
 
+            const fileContentCell = document.createElement('td');
+            fileContentCell.textContent = item.content;
+            row.appendChild(fileContentCell);
+
             // Aktionen-Zelle
             const actionsCell = document.createElement('td');
 

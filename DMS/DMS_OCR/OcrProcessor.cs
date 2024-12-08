@@ -23,12 +23,12 @@ namespace DMS_OCR
                         var tempPngFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".png");
 
                         // Bildvorverarbeitung
-                        image.Density = new Density(300, 300); // Setze die Auflösung
+                        image.Density = new Density(350, 350); // Setze die Auflösung
                         // Optional: Weitere Bildbearbeitungen
-                        image.ColorType = ColorType.Grayscale;
-                        image.Contrast();
-                        image.Sharpen();
-                        image.Despeckle();
+                        //image.ColorType = ColorType.Grayscale;
+                        //image.Contrast();
+                        //image.Sharpen();
+                        //image.Despeckle();
                         image.Format = MagickFormat.Png;
 
                         // Speichern des vorverarbeiteten Bildes als temporäre PNG-Datei
