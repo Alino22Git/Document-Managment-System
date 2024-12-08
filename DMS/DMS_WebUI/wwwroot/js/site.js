@@ -191,25 +191,43 @@ async function deleteDocument(documentId) {
     }
 }
 
+
 async function search() {
     try {
         const searchText = document.getElementById('searchInput').value;
-        //const formData = new FormData();
-        //formData.append('Search', searchText);
 
-        const response = await fetch(`${ apiUrl }/search/fuzzy`, {
+        const response = await fetch(`${apiUrl}/search/fuzzy`, {
             method: 'POST',
-            body: searchText,
+            headers: {
+                'Content-Type': 'application/json', // Content-Type setzen
+            },
+            body: JSON.stringify(searchText), // Direkt einen JSON-String senden
         });
+
         if (!response.ok) {
-            throw new Error(`HTTP-Fehler! Status: ${response.status}`);
+            const errorData = await response.json();
+            throw new Error(`Fehler: ${errorData.message || response.statusText}`);
         }
 
-        const data = await response.json();
+        const searchResults = await response.json();
+        const documents = [];
+
+        // Sammle alle Dokumente aus der Datenbank
+        for (const result of searchResults) {
+            const documentResponse = await fetch(`${apiUrl}/${result.id}`);
+            if (documentResponse.ok) {
+                const document = await documentResponse.json();
+                documents.push(document);
+            } else {
+                console.warn(`Dokument mit ID ${result.id} konnte nicht geladen werden.`);
+            }
+        }
+
+        // Aktualisiere die Tabelle
         const tableBody = document.getElementById('apiTableBody');
         tableBody.innerHTML = ''; // Tabelle leeren bevor neue Daten eingefügt werden
 
-        data.forEach((item) => {
+        documents.forEach((item) => {
             const row = document.createElement('tr');
 
             const idCell = document.createElement('td');
@@ -231,14 +249,12 @@ async function search() {
             // Aktionen-Zelle
             const actionsCell = document.createElement('td');
 
-            // Bearbeiten-Schaltfläche
             const editButton = document.createElement('button');
             editButton.textContent = 'Bearbeiten';
             editButton.classList.add('btn', 'btn-sm', 'btn-warning', 'mr-1');
             editButton.onclick = () => editDocument(item.id, item.title, item.fileType);
             actionsCell.appendChild(editButton);
 
-            // Löschen-Schaltfläche
             const deleteButton = document.createElement('button');
             deleteButton.textContent = 'Löschen';
             deleteButton.classList.add('btn', 'btn-sm', 'btn-danger');
@@ -246,11 +262,16 @@ async function search() {
             actionsCell.appendChild(deleteButton);
 
             row.appendChild(actionsCell);
-
             tableBody.appendChild(row);
         });
     } catch (error) {
-        console.error('Fehler beim Abrufen der API-Daten:', error);
-        alert('Fehler beim Laden der Daten. Bitte versuchen Sie es später erneut.');
+        console.error('Fehler beim Abrufen der Suchergebnisse:', error);
+        alert(`Fehler beim Suchen: ${error.message}`);
     }
 }
+
+
+
+
+
+

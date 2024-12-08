@@ -409,7 +409,7 @@ namespace DMS_REST_API.Controllers
             var response = await _client.SearchAsync<Document>(s => s
                 .Index("documents")
                 .Query(q => q.Match(m => m
-                    .Field(f => f.Content)
+                    .Field(f => f.Content).Field(f=>f.Title)
                     .Query(searchTerm)
                     .Fuzziness(new Fuzziness(2)))));
 

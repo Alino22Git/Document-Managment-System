@@ -31,21 +31,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d039b34e-bbb2-4ba7-9af8-85ad4bded8b2" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/DMS_OCR/OcrResultMessage.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DMS_REST_API/DTO/DocumentUpdateDto.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DMS_REST_API/Services/RabbitMqListenerService.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DMS/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DMS/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DMS_DAL/Entities/Document.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DMS_DAL/Entities/Document.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DMS_DAL/Migrations/DMS_ContextModelSnapshot.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DMS_DAL/Migrations/DMS_ContextModelSnapshot.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DMS_OCR/DMS_OCR.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/DMS_OCR/DMS_OCR.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DMS_OCR/OcrMessage.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DMS_OCR/OcrMessage.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DMS_OCR/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DMS_OCR/Program.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DMS_REST_API/Controllers/DocumentContoller.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DMS_REST_API/Controllers/DocumentContoller.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DMS_REST_API/DMS_REST_API.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/DMS_REST_API/DMS_REST_API.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DMS_REST_API/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DMS_REST_API/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DMS_REST_API/Services/IRabbitMQPublisher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DMS_REST_API/Services/IRabbitMQPublisher.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/minio_data/.minio.sys/tmp/c3e9145d-23d5-4be2-8ef2-80cfc364430a" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DMS_WebUI/wwwroot/js/site.js" beforeDir="false" afterPath="$PROJECT_DIR$/DMS_WebUI/wwwroot/js/site.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -104,6 +92,7 @@
     "Docker.DMS_WebUI/Dockerfile.executor": "Run",
     "Docker.docker-compose.yml.elasticsearch: Compose Deployment.executor": "Run",
     "Docker.docker-compose.yml.kibana: Compose Deployment.executor": "Run",
+    "Docker.docker-compose.yml.webui: Compose Deployment.executor": "Run",
     "Docker.docker-compose.yml: Compose Deployment.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "ElasticSearch",
@@ -126,7 +115,7 @@
     ]
   }
 }]]></component>
-  <component name="RunManager" selected="Docker.docker-compose.yml.kibana: Compose Deployment">
+  <component name="RunManager" selected="Docker.docker-compose.yml.webui: Compose Deployment">
     <configuration name="DMS_OCR" type="DotNetProject" factoryName=".NET Project">
       <option name="EXE_PATH" value="" />
       <option name="PROGRAM_PARAMETERS" value="" />
@@ -430,6 +419,20 @@
       <EXTENSION ID="com.jetbrains.rider.docker.debug" isFastModeEnabled="true" isSslEnabled="false" />
       <method v="2" />
     </configuration>
+    <configuration name="docker-compose.yml.webui: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
+      <deployment type="docker-compose.yml">
+        <settings>
+          <option name="services">
+            <list>
+              <option value="webui" />
+            </list>
+          </option>
+          <option name="sourceFilePath" value="docker-compose.yml" />
+        </settings>
+      </deployment>
+      <EXTENSION ID="com.jetbrains.rider.docker.debug" isFastModeEnabled="true" isSslEnabled="false" />
+      <method v="2" />
+    </configuration>
     <list>
       <item itemvalue=".NET Launch Settings Profile.DMS: http" />
       <item itemvalue=".NET Launch Settings Profile.DMS: https" />
@@ -448,11 +451,13 @@
       <item itemvalue="Docker.DMS/Dockerfile" />
       <item itemvalue="Docker.DMS_WebUI/Dockerfile" />
       <item itemvalue="Docker.docker-compose.yml: Compose Deployment" />
+      <item itemvalue="Docker.docker-compose.yml.webui: Compose Deployment" />
       <item itemvalue="Docker.docker-compose.yml.elasticsearch: Compose Deployment" />
       <item itemvalue="Docker.docker-compose.yml.kibana: Compose Deployment" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Docker.docker-compose.yml.webui: Compose Deployment" />
         <item itemvalue="Docker.docker-compose.yml.kibana: Compose Deployment" />
         <item itemvalue="Docker.docker-compose.yml.elasticsearch: Compose Deployment" />
       </list>
