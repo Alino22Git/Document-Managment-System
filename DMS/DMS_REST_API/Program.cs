@@ -5,7 +5,8 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using DMS_REST_API.DTO;
 using DMS_DAL.Repositories;
-using DMS_DAL.Data; 
+using DMS_DAL.Data;
+using Elastic.Clients.Elasticsearch;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -50,11 +51,17 @@ builder.Services.AddDbContext<DMS_Context>(options =>
 // Repository registrieren
 builder.Services.AddScoped<IDocumentRepository, DocumentRepository>();
 
+
+var elasticUri = builder.Configuration.GetConnectionString("ElasticSearch") ?? "http://elasticsearch:9200";
+builder.Services.AddSingleton(new ElasticsearchClient(new Uri(elasticUri)));
+
+
 // RabbitMQPublisher als IRabbitMQPublisher registrieren
 builder.Services.AddSingleton<IRabbitMQPublisher, RabbitMQPublisher>();
 
 // Hosted Services registrieren (optional)
-builder.Services.AddHostedService<OcrWorker>();
+builder.Services.AddHostedService<RabbitMqListenerService>();
+
 
 var app = builder.Build();
 

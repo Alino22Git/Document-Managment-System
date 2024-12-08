@@ -1,6 +1,11 @@
 version: '3.8'
 
 services:
+  
+  
+  
+  
+  
   dms_rest_api:
     image: dms_rest_api
     build:
@@ -14,7 +19,11 @@ services:
     depends_on:
       - dms_dal
       - rabbitmq
+      - elasticsearch
     restart: unless-stopped
+    networks: 
+      - elastic
+      - default
 
   webui:
     image: dms_webui
@@ -54,16 +63,96 @@ services:
     depends_on:
       - db
   
+  
   rabbitmq:
-    image: rabbitmq:management
+    image: rabbitmq:3-management
     ports:
       - "5672:5672"
       - "15672:15672"
-    volumes:
-      - ./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
     environment:
-      - RABBITMQ_DEFAULT_USER=user
-      - RABBITMQ_DEFAULT_PASS=password
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    healthcheck:
+      test: [ "CMD", "rabbitmq-diagnostics", "ping" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+
+  minio:
+    image: minio/minio
+    container_name: minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - ./minio_data:/data
+    environment:
+      MINIO_ROOT_USER: your-access-key
+      MINIO_ROOT_PASSWORD: your-secret-key
+    command: server /data --console-address ":9001"
+
+  ocr_worker:
+      build:
+        context: .
+        dockerfile: DMS_OCR/Dockerfile
+      depends_on:
+        - minio
+        - rabbitmq
+      networks: 
+        - elastic
+        - default
+      environment:
+        - RABBITMQ_HOST=rabbitmq
+        - RABBITMQ_USER=guest
+        - RABBITMQ_PASSWORD=guest
+        - RABBITMQ_PORT=5672
+        - MINIO_ENDPOINT=minio
+        - MINIO_PORT=9000
+        - MINIO_ACCESS_KEY=your-access-key
+        - MINIO_SECRET_KEY=your-secret-key
+        - MINIO_USE_SSL=false
+        - MINIO_BUCKET=uploads
+        - ELASTIC_USERNAME=elastic
+        - ELASTIC_PASSWORD=adminpw
+        - ELASTICSEARCH_HOST=http://elasticsearch:9200
+      
+      
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.16.0
+    container_name: elasticsearch
+    ports:
+      - "9200:9200"
+    environment:
+      - xpack.security.enabled=false
+      - discovery.type=single-node
+    volumes:
+      - elasticsearch-data:/data
+
+      
+  
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.16.0
+    container_name: kibana
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - xpack.security.enabled=false
+      - xpack.encryptedSavedObjects.enabled=false
+      - xpack.reporting.enabled=false
+      - xpack.spaces.enabled=false
+      - xpack.securitySolution.enabled=false
+      - xpack.enterpriseSearch.enabled=false
+
+
 
 volumes:
     postgres_data:
+    elasticsearch-data:
+
+networks:
+  elastic:
+    driver: bridge   

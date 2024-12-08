@@ -21,6 +21,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DMS_DAL", "DMS_DAL\DMS_DAL.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DMS_Tests", "..\DMS_Tests\DMS_Tests.csproj", "{882225D0-2979-4E32-85BF-535E37854FED}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DMS_OCR", "DMS_OCR\DMS_OCR.csproj", "{84E9BEFF-CF1C-4E6F-9EB9-3731FD03C7FD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +49,10 @@ Global
 		{882225D0-2979-4E32-85BF-535E37854FED}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{882225D0-2979-4E32-85BF-535E37854FED}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{882225D0-2979-4E32-85BF-535E37854FED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84E9BEFF-CF1C-4E6F-9EB9-3731FD03C7FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84E9BEFF-CF1C-4E6F-9EB9-3731FD03C7FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84E9BEFF-CF1C-4E6F-9EB9-3731FD03C7FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84E9BEFF-CF1C-4E6F-9EB9-3731FD03C7FD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
