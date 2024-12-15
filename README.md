@@ -32,7 +32,7 @@ The Document Management System consists of 8 Docker-Containers:
 - navigate to DMS_DAL directory
 - type "dotnet ef migrations add <migration-name>" into the terminal
 - type "dotnet ef database update" into the terminal
-- change "Host" parameter in appsettings.json of DMS_DAL back to "host.docker.internal" in order to enable the system itself to connect to the db
+- change "Host" parameter in appsettings.json of DMS_DAL back to "host.docker.internal" in order to enable the DAL services themself to connect to the db
 - restart system (maybe new build with "docker-compose build --no-cache" if there are caching problems)
 
 
