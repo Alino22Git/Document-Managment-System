@@ -16,7 +16,7 @@ The Document Management System consists of 8 Docker-Containers:
 - **elasticsearch**: A worker to handle searchrequests.
 - **kibana**: A helperservice to visualize the elasticsearch container.
 
-##HowTo - Integration Tests
+## HowTo - Integration Tests
 Make sure WSL is installed.
 Make sure Jq is installed in WSL ("sudo apt-get install jq").
 Make sure the Test.pdf PDF-file is also located in the same directory as the IntegrationTests.sh script (default location in the project folder).
