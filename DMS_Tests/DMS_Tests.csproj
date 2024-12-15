@@ -26,4 +26,8 @@
     <Using Include="Xunit" />
   </ItemGroup>
 
+	<ItemGroup>
+		<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.10" />
+	</ItemGroup>
+	
 </Project>

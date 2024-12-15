@@ -34,19 +34,15 @@ namespace DMS_REST_API.Controllers
             IDocumentRepository repository,
             IMapper mapper,
             ILogger<DocumentController> logger,
-            IRabbitMQPublisher rabbitMQPublisher)
+            IRabbitMQPublisher rabbitMQPublisher,
+            IMinioClient minio)
         {
             _repository = repository;
             _mapper = mapper;
             _logger = logger;
             _rabbitMQPublisher = rabbitMQPublisher;
             _client = client;
-            // Initialisieren des MinIO-Clients
-            _minioClient = new MinioClient()
-                .WithEndpoint("minio", 9000) // 'minio' als Servicename in docker-compose.yml
-                .WithCredentials("your-access-key", "your-secret-key") // Muss mit docker-compose.yml übereinstimmen
-                .WithSSL(false)
-                .Build();
+            _minioClient = minio;
         }
 
         /// <summary>

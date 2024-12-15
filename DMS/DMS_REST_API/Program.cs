@@ -9,6 +9,8 @@ using DMS_DAL.Data;
 using Elastic.Clients.Elasticsearch;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Minio;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -55,6 +57,14 @@ builder.Services.AddScoped<IDocumentRepository, DocumentRepository>();
 var elasticUri = builder.Configuration.GetConnectionString("ElasticSearch") ?? "http://elasticsearch:9200";
 builder.Services.AddSingleton(new ElasticsearchClient(new Uri(elasticUri)));
 
+builder.Services.AddSingleton<IMinioClient>(sp =>
+{
+    return new MinioClient()
+        .WithEndpoint("minio", 9000)
+        .WithCredentials("your-access-key", "your-secret-key")
+        .WithSSL(false)
+        .Build();
+});
 
 // RabbitMQPublisher als IRabbitMQPublisher registrieren
 builder.Services.AddSingleton<IRabbitMQPublisher, RabbitMQPublisher>();
