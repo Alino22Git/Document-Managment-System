@@ -9,6 +9,7 @@ using Minio;
 using Minio.DataModel.Args;
 using Elastic.Clients.Elasticsearch;
 using System.IO;
+using DMS_OCR.Exceptions;
 
 namespace DMS_OCR
 {
@@ -118,7 +119,7 @@ namespace DMS_OCR
                             if (ocrMessage == null || string.IsNullOrEmpty(ocrMessage.FileName) || string.IsNullOrEmpty(ocrMessage.Id))
                             {
                                 Console.WriteLine("[!] Ungültige Nachricht: Datei-Name oder ID fehlt.");
-                                return;
+                                throw new OcrWorkerExceptions.OcrFileNotFoundException("Ungültige Nachricht: Datei-Name oder ID fehlt.");
                             }
 
                             string fileName = ocrMessage.FileName;
@@ -145,6 +146,7 @@ namespace DMS_OCR
                         {
                             Console.WriteLine($"[!] Fehler bei der Verarbeitung der Nachricht: {ex.Message}");
                             Console.WriteLine(ex.StackTrace);
+                            throw new OcrWorkerExceptions.OcrWorkerException("Fehler bei der Verarbeitung der Nachricht", ex);
                         }
                     };
 
@@ -188,7 +190,7 @@ namespace DMS_OCR
             catch (Exception ex)
             {
                 Console.WriteLine($"[!] Fehler beim Herunterladen der Datei {fileName}: {ex.Message}");
-                throw;
+                throw new OcrWorkerExceptions.OcrFileNotFoundException("Datei konnte nicht heruntergeladen werden", ex);
             }
         }
         
@@ -217,6 +219,7 @@ namespace DMS_OCR
             {
                 Console.WriteLine($"[!] Ausnahme beim Indexieren des Dokuments: {ex.Message}");
                 Console.WriteLine(ex.StackTrace);
+                throw new OcrWorkerExceptions.ElasticSearchException("Fehler beim Indexieren des Dokuments", ex);
             }
         }
 
@@ -243,6 +246,7 @@ namespace DMS_OCR
             {
                 Console.WriteLine($"[!] Fehler beim Senden des OCR-Ergebnisses an RabbitMQ: {ex.Message}");
                 Console.WriteLine(ex.StackTrace);
+                throw new OcrWorkerExceptions.MessageQueueConnectionException("Fehler beim Senden des OCR-Ergebnisses an RabbitMQ", ex);
             }
         }
 

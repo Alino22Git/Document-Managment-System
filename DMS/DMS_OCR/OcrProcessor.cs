@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 using ImageMagick;
-
+using DMS_OCR.Exceptions;
 namespace DMS_OCR
 {
     public static class OcrProcessor
@@ -62,7 +62,7 @@ namespace DMS_OCR
                             stringBuilder.Append(result);
                         }
 
-                        // Löschen der temporären PNG-Datei nach der Verarbeitung
+                       
                         File.Delete(tempPngFile);
                     }
                 }
@@ -75,6 +75,7 @@ namespace DMS_OCR
                     Console.WriteLine($"Innere Ausnahme: {ex.InnerException.Message}");
                 }
                 Console.WriteLine($"Stacktrace: {ex.StackTrace}");
+                throw new OcrWorkerExceptions.OcrProcessingException("Fehler bei der OCR-Verarbeitung", ex);
             }
 
             return stringBuilder.ToString();

@@ -432,6 +432,12 @@ namespace DMS_REST_API.Controllers
             return StatusCode(500, new { message = "Failed to search documents", details = response.DebugInformation });
         }
 
+        
+        /// <summary>
+        /// Lädt ein in MinIo gespeichertes File herunter.
+        /// </summary>
+        /// <param name="id">Id des Dokuments welches heruntergeladen wird.</param>
+        /// <returns>Eine Liste von Dokumenten, die den Searchterm enthalten.</returns>
         [HttpGet("download/{id}")]
         public async Task<IActionResult> DownloadFile(int id)
         {

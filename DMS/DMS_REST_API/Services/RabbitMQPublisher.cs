@@ -2,6 +2,7 @@
 using DMS_REST_API.DTO;
 using System.Text.Json;
 using System.Text;
+using DMS_REST_API.Exceptions;
 using DMS_REST_API.Services;
 using Microsoft.Extensions.Logging;
 
@@ -50,7 +51,7 @@ public class RabbitMQPublisher : IRabbitMQPublisher, IDisposable
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to initialize RabbitMQ connection");
-            throw;
+            throw new MessageQueueConnectionException("Failed to initialize RabbitMQ connection", ex);
         }
     }
 
@@ -89,7 +90,7 @@ public class RabbitMQPublisher : IRabbitMQPublisher, IDisposable
         catch (Exception ex)
         {
             _logger.LogError(ex, DocumentEventErrorTemplate, "created", document.Id);
-            throw;
+            throw new MessagePublishException("Failed to publish document created event", ex);
         }
     }
 
@@ -115,7 +116,7 @@ public class RabbitMQPublisher : IRabbitMQPublisher, IDisposable
         catch (Exception ex)
         {
             _logger.LogError(ex, DocumentEventErrorTemplate, "updated", document.Id);
-            throw;
+            throw new MessagePublishException("Failed to publish document updated event", ex);
         }
     }
 
@@ -126,7 +127,6 @@ public class RabbitMQPublisher : IRabbitMQPublisher, IDisposable
             var message = JsonSerializer.Serialize(new { Id = documentId });
             var body = Encoding.UTF8.GetBytes(message);
 
-            // Set message as persistent
             var properties = _channel.CreateBasicProperties();
             properties.Persistent = true;
 
@@ -141,7 +141,7 @@ public class RabbitMQPublisher : IRabbitMQPublisher, IDisposable
         catch (Exception ex)
         {
             _logger.LogError(ex, DocumentEventErrorTemplate, "deleted", documentId);
-            throw;
+            throw new MessagePublishException("Failed to publish document deleted event", ex);
         }
     }
 
