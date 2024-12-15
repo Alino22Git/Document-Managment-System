@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const title = titleInput.value.trim();
         const fileType = fileTypeInput.value.trim();
         const file = fileInput.files[0];
-        
+
         if (!title) {
             alert('Bitte geben Sie einen Titel ein!');
             return;
@@ -111,9 +111,16 @@ async function fetchDocuments() {
             // Löschen-Schaltfläche
             const deleteButton = document.createElement('button');
             deleteButton.textContent = 'Löschen';
-            deleteButton.classList.add('btn', 'btn-sm', 'btn-danger');
+            deleteButton.classList.add('btn', 'btn-sm', 'btn-danger', 'mr-1');
             deleteButton.onclick = () => deleteDocument(item.id);
             actionsCell.appendChild(deleteButton);
+
+            // Download-Schaltfläche
+            const downloadButton = document.createElement('button');
+            downloadButton.textContent = 'Download';
+            downloadButton.classList.add('btn', 'btn-sm', 'btn-info');
+            downloadButton.onclick = () => downloadDocument(item.id);
+            actionsCell.appendChild(downloadButton);
 
             row.appendChild(actionsCell);
 
@@ -191,7 +198,7 @@ async function deleteDocument(documentId) {
     }
 }
 
-
+// Funktion zum Suchen von Dokumenten
 async function search() {
     try {
         const searchText = document.getElementById('searchInput').value;
@@ -257,9 +264,15 @@ async function search() {
 
             const deleteButton = document.createElement('button');
             deleteButton.textContent = 'Löschen';
-            deleteButton.classList.add('btn', 'btn-sm', 'btn-danger');
+            deleteButton.classList.add('btn', 'btn-sm', 'btn-danger', 'mr-1');
             deleteButton.onclick = () => deleteDocument(item.id);
             actionsCell.appendChild(deleteButton);
+
+            const downloadButton = document.createElement('button');
+            downloadButton.textContent = 'Download';
+            downloadButton.classList.add('btn', 'btn-sm', 'btn-info');
+            downloadButton.onclick = () => downloadDocument(item.id);
+            actionsCell.appendChild(downloadButton);
 
             row.appendChild(actionsCell);
             tableBody.appendChild(row);
@@ -270,8 +283,9 @@ async function search() {
     }
 }
 
-
-
-
-
+// Funktion zum Herunterladen eines Dokuments
+function downloadDocument(documentId) {
+    // Öffnet ein neues Fenster oder Tab, um den Download zu starten
+    window.open(`${apiUrl}/download/${documentId}`, '_blank');
+}
 

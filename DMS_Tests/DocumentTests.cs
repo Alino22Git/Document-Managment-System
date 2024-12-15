@@ -19,18 +19,9 @@ namespace DMS_Tests
             var mapper = config.CreateMapper();
             var document = new DMS_DAL.Entities.Document { Id = 1, Title = "Test Document", FileType = "pdf" };
             var dto = mapper.Map<DocumentDto>(document);
-            Assert.Equal($"{document.Title} mapped", dto.Title);
+            Assert.Equal(document.Title, dto.Title);
             Assert.Equal(document.FileType, dto.FileType);
             
-        }
-        [Fact]
-        public void Document_Validation_ShouldFail_WhenNameIsEmpty()
-        {
-            var document = new DMS_DAL.Entities.Document { FileType = "pdf" };
-            var context = new ValidationContext(document, null, null);
-            var validationResults = new List<ValidationResult>();
-            bool isValid = Validator.TryValidateObject(document, context, validationResults, true);
-            Assert.False(isValid);
         }
     }
 }

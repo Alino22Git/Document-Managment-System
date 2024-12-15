@@ -15,6 +15,7 @@ using System.IO;
 using System;
 using Elastic.Clients.Elasticsearch;
 using Elastic.Clients.Elasticsearch.Nodes;
+using log4net;
 
 namespace DMS_REST_API.Controllers
 {
@@ -22,9 +23,11 @@ namespace DMS_REST_API.Controllers
     [Route("[controller]")]
     public class DocumentController : ControllerBase
     {
+        private readonly ILogger<DocumentController> _logger;
+
         private readonly IDocumentRepository _repository;
         private readonly IMapper _mapper;
-        private readonly ILogger<DocumentController> _logger;
+
         private readonly IRabbitMQPublisher _rabbitMQPublisher;
         private readonly IMinioClient _minioClient; 
         private const string BucketName = "uploads";
@@ -34,19 +37,15 @@ namespace DMS_REST_API.Controllers
             IDocumentRepository repository,
             IMapper mapper,
             ILogger<DocumentController> logger,
-            IRabbitMQPublisher rabbitMQPublisher)
+            IRabbitMQPublisher rabbitMQPublisher,
+            IMinioClient minio)
         {
             _repository = repository;
             _mapper = mapper;
             _logger = logger;
             _rabbitMQPublisher = rabbitMQPublisher;
             _client = client;
-            // Initialisieren des MinIO-Clients
-            _minioClient = new MinioClient()
-                .WithEndpoint("minio", 9000) // 'minio' als Servicename in docker-compose.yml
-                .WithCredentials("your-access-key", "your-secret-key") // Muss mit docker-compose.yml übereinstimmen
-                .WithSSL(false)
-                .Build();
+            _minioClient = minio;
         }
 
         /// <summary>
@@ -204,14 +203,8 @@ namespace DMS_REST_API.Controllers
                 }
 
                 // Rückgabe der Dokumentdetails ohne Content (wird später vom Listener-Service aktualisiert)
-                return CreatedAtAction(nameof(GetById), new { id = document.Id }, new 
-                { 
-                    document.Id, 
-                    document.Title, 
-                    document.FileType, 
-                    document.FileName,
-                    Content = "OCR wird verarbeitet..."
-                });
+                var returnItem = _mapper.Map<DocumentDto>(document);
+                return CreatedAtAction(nameof(GetById), new { id = document.Id }, returnItem);
             }
             catch (Minio.Exceptions.MinioException ex)
             {
@@ -271,14 +264,9 @@ namespace DMS_REST_API.Controllers
                 }
 
                 // Rückgabe der Dokumentdetails ohne Content (wird später vom Listener-Service aktualisiert)
-                return CreatedAtAction(nameof(GetById), new { id = document.Id }, new 
-                { 
-                    document.Id, 
-                    document.Title, 
-                    document.FileType, 
-                    document.FileName,
-                    Content = "OCR wird verarbeitet..."
-                });
+                var returnItem = _mapper.Map<DocumentDto>(document);
+                returnItem.Content = "OCR wird verarbeitet...";
+                return CreatedAtAction(nameof(GetById), new { id = document.Id }, returnItem);
             }
             catch (Exception ex)
             {
@@ -397,7 +385,11 @@ namespace DMS_REST_API.Controllers
             }
         }
 
-        // Fuzzy-Search with Match(Normalisation)
+        /// <summary>
+        /// Sucht in Elasticsearch mit einem query.
+        /// </summary>
+        /// <param name="searchTerm">Zu suchender Text.</param>
+        /// <returns>Eine Liste von Dokumenten, die den Searchterm enthalten.</returns>
         [HttpPost("search/fuzzy")]
         public async Task<IActionResult> SearchByFuzzy([FromBody] string searchTerm)
         {
@@ -405,16 +397,26 @@ namespace DMS_REST_API.Controllers
             {
                 return BadRequest(new { message = "Search term cannot be empty" });
             }
-
-            var response = await _client.SearchAsync<Document>(s => s
-                .Index("documents")
-                .Query(q => q.Match(m => m
-                    .Field(f => f.Content).Field(f=>f.Title)
-                    .Query(searchTerm)
-                    .Fuzziness(new Fuzziness(2)))));
+            try
+            {
+                var response = await _client.SearchAsync<Document>(s => s
+                    .Index("documents")
+                    .Query(q => q.MultiMatch(mm => mm
+                        .Fields(new[] { "content", "title" })   // Beide Felder angeben
+                        .Query(searchTerm)
+                        .Fuzziness(new Fuzziness(2))
+                    ))
+                );
 
             return HandleSearchResponse(response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Fehler beim Suchen von Dokumenten mit dem Suchbegriff {SearchTerm}.", searchTerm);
+                return StatusCode(500, "Interner Serverfehler beim Suchen von Dokumenten.");
+            }
         }
+
 
         private IActionResult HandleSearchResponse(SearchResponse<Document> response)
         {
@@ -430,6 +432,63 @@ namespace DMS_REST_API.Controllers
             return StatusCode(500, new { message = "Failed to search documents", details = response.DebugInformation });
         }
 
+        
+        /// <summary>
+        /// Lädt ein in MinIo gespeichertes File herunter.
+        /// </summary>
+        /// <param name="id">Id des Dokuments welches heruntergeladen wird.</param>
+        /// <returns>Eine Liste von Dokumenten, die den Searchterm enthalten.</returns>
+        [HttpGet("download/{id}")]
+        public async Task<IActionResult> DownloadFile(int id)
+        {
+            try
+            {
+                _logger.LogInformation("GET /api/document/download/{Id} aufgerufen.", id);
+
+                var document = await _repository.GetDocumentAsync(id);
+                if (document == null)
+                {
+                    _logger.LogWarning("Dokument mit ID {Id} wurde nicht gefunden.", id);
+                    return NotFound(new { message = $"Dokument mit ID {id} wurde nicht gefunden." });
+                }
+
+                var fileName = document.FileName;
+                if (string.IsNullOrEmpty(fileName))
+                {
+                    _logger.LogWarning("Dokument mit ID {Id} hat keinen gültigen Dateinamen.", id);
+                    return BadRequest(new { message = $"Dokument mit ID {id} hat keinen gültigen Dateinamen." });
+                }
+
+                var ms = new MemoryStream();
+                try
+                {
+                    var args = new GetObjectArgs()
+                        .WithBucket(BucketName)
+                        .WithObject(fileName)
+                        .WithCallbackStream((stream) =>
+                        {
+                            stream.CopyTo(ms);
+                        });
+
+                    await _minioClient.GetObjectAsync(args);
+
+                    ms.Position = 0; // Stream zurücksetzen, um von Anfang an zu lesen
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Fehler beim Herunterladen der Datei {FileName} von MinIO.", fileName);
+                    return StatusCode(500, "Interner Serverfehler beim Herunterladen der Datei.");
+                }
+
+                // PDF ausliefern
+                return File(ms, "application/pdf", fileName);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Fehler beim Herunterladen der Datei für Dokument mit ID {Id}.", id);
+                return StatusCode(500, "Interner Serverfehler beim Herunterladen der Datei.");
+            }
+        }
 
     }
 }

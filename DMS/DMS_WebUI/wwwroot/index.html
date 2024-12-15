@@ -3,62 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+    <title>DMS-Dashboard</title>
     <!-- Bootstrap CSS einbinden -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <!-- Ihre eigene CSS-Datei -->
     <link rel="stylesheet" href="/site.css">
+    <style>
+        .card{
+            height: 100%;
+        }
+        .col-equal {
+            display: flex;
+            flex-direction: column;
+        }
+    </style>
 </head>
 <body>
-    <div class="container my-4">
-        <h1 class="mb-4">Dashboard</h1>
-        <p>Willkommen zu Ihrem einfachen123 Dashboard.</p>
-        
-        <div class="search-container">
-            <input type="text" id="searchInput" placeholder="Search...">
-            <button type="button" onclick="search()">Search</button>
-        </div>
-
-        <!-- Tabelle für Dokumente -->
-        <table class="table table-striped">
-            <thead class="thead-dark">
-                <tr>
-                    <th>ID</th>
-                    <th>Titel</th>
-                    <th>Dateityp</th>
-                    <th>Content</th>
-                    <th>Aktionen</th>
-                </tr>
-            </thead>
-            <tbody id="apiTableBody">
-                <!-- Hier werden die API-Daten eingefügt -->
-            </tbody>
-        </table>
-    </div>
-
-<div class="container my-4">
-    <h3>Neues Dokument hinzufügen</h3>
-    <form id="uploadForm">
-        <div class="form-group">
-            <label for="titleInput">Titel</label>
-            <input type="text" id="titleInput" class="form-control" placeholder="Dokumenttitel" required>
-        </div>
-        <div class="form-group">
-            <label for="fileTypeInput">Dateityp</label>
-            <input type="text" id="fileTypeInput" class="form-control" placeholder="Dateityp (z.B. PDF)" required>
-        </div>
-        <div class="form-group">
-            <label for="fileInput">Datei hochladen</label>
-            <input type="file" id="fileInput" class="form-control-file" accept="application/pdf" required>
-        </div>
-        <button type="submit" class="btn btn-primary">Dokument hinzufügen</button>
-    </form>
-    <p id="uploadStatus"></p>
+<div class="container my-2" style="padding: 0px;">
+    <h1 class="mb-4">Dashboard</h1>
 </div>
 
+<!-- Übergeordnete container für die drei Sektionen nebeneinander -->
 <div class="container my-4">
-    <h3>Dokumente neu laden</h3>
-    <button class="btn btn-secondary" onclick="fetchDocuments()">Daten aktualisieren</button>
+    <div class="row align-items-stretch">
+        <!-- Suche -->
+        <div class="col col-equal" style="max-width: 30rem;">
+            <div class="card flex-fill">
+                <div class="card-body">
+                    <h3 class="card-title">Suche</h3>
+                    <div class="search-container">
+                        <input type="text" id="searchInput" class="form-control d-inline-block w-auto" placeholder="Search...">
+                        <button type="button" class="btn btn-primary mt-2" onclick="search()">Search</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Neues Dokument hinzufügen (etwas breiter) -->
+        <div class="col col-equal" style="max-width: 40rem;">
+            <div class="card flex-fill">
+                <div class="card-body">
+                    <h3 class="card-title">Neues Dokument hinzufügen</h3>
+                    <form id="uploadForm">
+                        <div class="form-group">
+                            <label for="titleInput">Titel</label>
+                            <input type="text" id="titleInput" class="form-control" placeholder="Dokumenttitel" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="fileTypeInput">Dateityp</label>
+                            <input type="text" id="fileTypeInput" class="form-control" placeholder="Dateityp (z.B. PDF)" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="fileInput">Datei hochladen</label>
+                            <input type="file" id="fileInput" class="form-control-file" accept="application/pdf" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Dokument hinzufügen</button>
+                    </form>
+                    <p id="uploadStatus" class="mt-2"></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dokumente neu laden -->
+        <div class="col col-equal" style="max-width: 30rem;">
+            <div class="card flex-fill">
+                <div class="card-body">
+                    <h3 class="card-title">Dokumente neu laden</h3>
+                    <button class="btn btn-secondary" onclick="fetchDocuments()">Daten aktualisieren</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Tabelle für Dokumente -->
+<div class="container my-4">
+    <h1>Liste der Dokumente</h1>
+    <table class="table table-striped">
+        <thead class="thead-dark">
+        <tr>
+            <th>ID</th>
+            <th>Titel</th>
+            <th>Dateityp</th>
+            <th>Content</th>
+            <th>Aktionen</th>
+        </tr>
+        </thead>
+        <tbody id="apiTableBody">
+        <!-- Hier werden die API-Daten eingefügt -->
+        </tbody>
+    </table>
 </div>
 
 <!-- jQuery und Bootstrap JS einbinden -->
