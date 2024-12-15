@@ -393,13 +393,16 @@ namespace DMS_REST_API.Controllers
 
             var response = await _client.SearchAsync<Document>(s => s
                 .Index("documents")
-                .Query(q => q.Match(m => m
-                    .Field(f => f.Content).Field(f=>f.Title)
+                .Query(q => q.MultiMatch(mm => mm
+                    .Fields(new[] { "content", "title" })   // Beide Felder angeben
                     .Query(searchTerm)
-                    .Fuzziness(new Fuzziness(2)))));
+                    .Fuzziness(new Fuzziness(2))
+                ))
+            );
 
             return HandleSearchResponse(response);
         }
+
 
         private IActionResult HandleSearchResponse(SearchResponse<Document> response)
         {
@@ -415,6 +418,57 @@ namespace DMS_REST_API.Controllers
             return StatusCode(500, new { message = "Failed to search documents", details = response.DebugInformation });
         }
 
+        [HttpGet("download/{id}")]
+        public async Task<IActionResult> DownloadFile(int id)
+        {
+            try
+            {
+                _logger.LogInformation("GET /api/document/download/{Id} aufgerufen.", id);
+
+                var document = await _repository.GetDocumentAsync(id);
+                if (document == null)
+                {
+                    _logger.LogWarning("Dokument mit ID {Id} wurde nicht gefunden.", id);
+                    return NotFound(new { message = $"Dokument mit ID {id} wurde nicht gefunden." });
+                }
+
+                var fileName = document.FileName;
+                if (string.IsNullOrEmpty(fileName))
+                {
+                    _logger.LogWarning("Dokument mit ID {Id} hat keinen gültigen Dateinamen.", id);
+                    return BadRequest(new { message = $"Dokument mit ID {id} hat keinen gültigen Dateinamen." });
+                }
+
+                var ms = new MemoryStream();
+                try
+                {
+                    var args = new GetObjectArgs()
+                        .WithBucket(BucketName)
+                        .WithObject(fileName)
+                        .WithCallbackStream((stream) =>
+                        {
+                            stream.CopyTo(ms);
+                        });
+
+                    await _minioClient.GetObjectAsync(args);
+
+                    ms.Position = 0; // Stream zurücksetzen, um von Anfang an zu lesen
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Fehler beim Herunterladen der Datei {FileName} von MinIO.", fileName);
+                    return StatusCode(500, "Interner Serverfehler beim Herunterladen der Datei.");
+                }
+
+                // PDF ausliefern
+                return File(ms, "application/pdf", fileName);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Fehler beim Herunterladen der Datei für Dokument mit ID {Id}.", id);
+                return StatusCode(500, "Interner Serverfehler beim Herunterladen der Datei.");
+            }
+        }
 
     }
 }

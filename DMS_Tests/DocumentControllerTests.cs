@@ -411,6 +411,31 @@ namespace DMS_Tests.Controllers
             Assert.IsType<NotFoundObjectResult>(result);
         }
 
+        [Fact]
+        public async Task DownloadFile_DocumentDoesNotExist_ReturnsNotFound()
+        {
+            // Arrange
+            int testId = 999;
+            // Kein Dokument für diese ID vorhanden
+            _mockRepo.Setup(r => r.GetDocumentAsync(testId))
+                .ReturnsAsync((Document)null); // document = null
+
+            // Act
+            var result = await _controller.DownloadFile(testId);
+
+            // Assert
+            var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
+            Assert.NotNull(notFoundResult.Value);
+
+            var notFoundValue = notFoundResult.Value;
+            var messageProperty = notFoundValue.GetType().GetProperty("message");
+            Assert.NotNull(messageProperty);
+
+            var messageValue = messageProperty.GetValue(notFoundValue);
+            Assert.Equal($"Dokument mit ID {testId} wurde nicht gefunden.", messageValue);
+        }
+
+        
         #endregion
 
     }

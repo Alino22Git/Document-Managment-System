@@ -31,14 +31,24 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d039b34e-bbb2-4ba7-9af8-85ad4bded8b2" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../DMS_Tests/DocumentControllerTests_Download.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DMS/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DMS/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DMS_DAL/Controllers/DocumentsController.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DMS_DAL/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DMS_DAL/Program.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DMS_REST_API/Controllers/DocumentContoller.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DMS_REST_API/Controllers/DocumentContoller.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DMS_WebUI/wwwroot/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/DMS_WebUI/wwwroot/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DMS_WebUI/wwwroot/js/site.js" beforeDir="false" afterPath="$PROJECT_DIR$/DMS_WebUI/wwwroot/js/site.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DMS_WebUI/wwwroot/site.css" beforeDir="false" afterPath="$PROJECT_DIR$/DMS_WebUI/wwwroot/site.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DMS_Tests/DocumentControllerTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../DMS_Tests/DocumentControllerTests.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="DpaMonitoringSettings">
+    <option name="autoShow" value="false" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
@@ -56,6 +66,8 @@
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/e5b3bf527769cb3295444e29d617bf2ebe5666bbe8e9c881a31444ba66846cfa/BooleanAsserts.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/ClassLibrary1/Class1.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/DMS_DAL/Entities/Document.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/DMS_WebUI/wwwroot/lib/bootstrap/dist/js/bootstrap.bundle.js.map" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/DMS_WebUI/wwwroot/lib/bootstrap/dist/js/bootstrap.bundle.min.js.map" root0="FORCE_HIGHLIGHTING" />
@@ -89,19 +101,20 @@
     ".NET Launch Settings Profile.DMS: http.executor": "Run",
     ".NET Launch Settings Profile.DMS: https.executor": "Run",
     ".NET Project.DMS_OCR.executor": "Run",
+    "0eaae03f-9989-47d2-988f-9f987ba13f54.executor": "Debug",
     "Docker.DMS_WebUI/Dockerfile.executor": "Run",
     "Docker.docker-compose.yml.elasticsearch: Compose Deployment.executor": "Run",
     "Docker.docker-compose.yml.kibana: Compose Deployment.executor": "Run",
     "Docker.docker-compose.yml.webui: Compose Deployment.executor": "Run",
     "Docker.docker-compose.yml: Compose Deployment.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "ElasticSearch",
+    "git-widget-placeholder": "UnittestingLastSprint",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.general",
+    "settings.editor.selected.configurable": "RiderDotCoverFilteringPageId",
     "vue.rearranger.settings.migration": "true"
   },
   "keyToStringList": {
@@ -484,11 +497,83 @@
       <workItem from="1733152683367" duration="2942000" />
       <workItem from="1733582227711" duration="45000" />
       <workItem from="1733582620256" duration="32193000" />
+      <workItem from="1733753667407" duration="4141000" />
+      <workItem from="1734272155860" duration="548000" />
+      <workItem from="1734272761197" duration="5605000" />
+      <workItem from="1734279990299" duration="6359000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="UnitTestsCoverage.Settings">
+    <option name="coveragePercentColumnWidth" value="146" />
+    <option name="sortOrder" value="DESCENDING" />
+    <option name="sortedColumn" value="1" />
+    <option name="symbolColumnWidth" value="308" />
+    <coverage-tree-state>
+      <expand>
+        <path>
+          <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
+          <item name="Total 73% 186/691" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+        </path>
+        <path>
+          <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
+          <item name="Total 73% 186/691" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="DMS_DAL 100% 0/41" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+        </path>
+        <path>
+          <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
+          <item name="Total 73% 186/691" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="DMS_DAL 100% 0/41" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(1.0.0.0, net8.0) 100% 0/41" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+        </path>
+        <path>
+          <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
+          <item name="Total 73% 186/691" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="DMS_DAL 100% 0/41" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(1.0.0.0, net8.0) 100% 0/41" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="DMS_DAL 100% 0/41" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+        </path>
+        <path>
+          <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
+          <item name="Total 73% 186/691" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="DMS_REST_API 71% 80/273" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+        </path>
+        <path>
+          <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
+          <item name="Total 73% 186/691" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="DMS_REST_API 71% 80/273" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(1.0.0.0, net8.0) 71% 80/273" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+        </path>
+        <path>
+          <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
+          <item name="Total 73% 186/691" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="DMS_REST_API 71% 80/273" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(1.0.0.0, net8.0) 71% 80/273" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="DMS_REST_API 71% 80/273" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+        </path>
+        <path>
+          <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
+          <item name="Total 73% 186/691" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="DMS_REST_API 71% 80/273" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(1.0.0.0, net8.0) 71% 80/273" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="DMS_REST_API 71% 80/273" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Controllers 66% 79/232" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+        </path>
+        <path>
+          <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
+          <item name="Total 73% 186/691" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="DMS_REST_API 71% 80/273" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="(1.0.0.0, net8.0) 71% 80/273" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="DMS_REST_API 71% 80/273" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Controllers 66% 79/232" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="DocumentController 66% 79/232" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+        </path>
+      </expand>
+      <select />
+    </coverage-tree-state>
   </component>
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="VcsManagerConfiguration">
