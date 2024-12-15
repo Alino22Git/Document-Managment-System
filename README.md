@@ -19,11 +19,12 @@ The Document Management System consists of 8 Docker-Containers:
 ## HowTo - Integration Tests
 - Make sure WSL is installed.
 - Make sure Jq is installed in WSL ("sudo apt-get install jq").
-- Make sure the Test.pdf PDF-file is also located in the same directory as the IntegrationTests.sh script (default location in the project folder).
+- Make sure the Test.pdf PDF-file is also located in the same directory as the IntegrationTests.sh script (default location in the "IntegrationTests" folder inside project folder).
 - Open folder in wich IntegrationTests.sh and Test.pdf are located with WSL.
 - Make sure all containers of the tested system are up an running.
 - Type "./IntegrationTests.sh" into the WSL-console.
 - Check results of integration tests in the WSL-console.
+- Check if file downloaded.pdf appeared (should have the same file just with different name as uploaded)
 
 ## HowTo - Db Migration:
 - change Host parameter in appsettings.json of DMS_DAL to "localhost"
