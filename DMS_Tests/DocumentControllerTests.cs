@@ -23,11 +23,11 @@ namespace DMS_Tests.Controllers
     {
         private readonly Mock<IDocumentRepository> _mockRepo;
         private readonly Mock<IMapper> _mockMapper;
-        private readonly Mock<ILogger<DocumentController>> _mockLogger;
         private readonly Mock<IRabbitMQPublisher> _mockPublisher;
         private readonly Mock<ElasticsearchClient> _mockElastic;
         private readonly Mock<IMinioClient> _mockMinio;
         private readonly DocumentController _controller;
+        private readonly Mock<ILogger<DocumentController>> _mockLogger;
 
         public DocumentControllerTests()
         {

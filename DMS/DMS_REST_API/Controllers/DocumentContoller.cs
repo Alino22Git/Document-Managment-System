@@ -15,6 +15,7 @@ using System.IO;
 using System;
 using Elastic.Clients.Elasticsearch;
 using Elastic.Clients.Elasticsearch.Nodes;
+using log4net;
 
 namespace DMS_REST_API.Controllers
 {
@@ -22,9 +23,11 @@ namespace DMS_REST_API.Controllers
     [Route("[controller]")]
     public class DocumentController : ControllerBase
     {
+        private readonly ILogger<DocumentController> _logger;
+
         private readonly IDocumentRepository _repository;
         private readonly IMapper _mapper;
-        private readonly ILogger<DocumentController> _logger;
+
         private readonly IRabbitMQPublisher _rabbitMQPublisher;
         private readonly IMinioClient _minioClient; 
         private const string BucketName = "uploads";
@@ -382,7 +385,11 @@ namespace DMS_REST_API.Controllers
             }
         }
 
-        // Fuzzy-Search with Match(Normalisation)
+        /// <summary>
+        /// Sucht in Elasticsearch mit einem query.
+        /// </summary>
+        /// <param name="searchTerm">Zu suchender Text.</param>
+        /// <returns>Eine Liste von Dokumenten, die den Searchterm enthalten.</returns>
         [HttpPost("search/fuzzy")]
         public async Task<IActionResult> SearchByFuzzy([FromBody] string searchTerm)
         {
@@ -390,17 +397,24 @@ namespace DMS_REST_API.Controllers
             {
                 return BadRequest(new { message = "Search term cannot be empty" });
             }
-
-            var response = await _client.SearchAsync<Document>(s => s
-                .Index("documents")
-                .Query(q => q.MultiMatch(mm => mm
-                    .Fields(new[] { "content", "title" })   // Beide Felder angeben
-                    .Query(searchTerm)
-                    .Fuzziness(new Fuzziness(2))
-                ))
-            );
+            try
+            {
+                var response = await _client.SearchAsync<Document>(s => s
+                    .Index("documents")
+                    .Query(q => q.MultiMatch(mm => mm
+                        .Fields(new[] { "content", "title" })   // Beide Felder angeben
+                        .Query(searchTerm)
+                        .Fuzziness(new Fuzziness(2))
+                    ))
+                );
 
             return HandleSearchResponse(response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Fehler beim Suchen von Dokumenten mit dem Suchbegriff {SearchTerm}.", searchTerm);
+                return StatusCode(500, "Interner Serverfehler beim Suchen von Dokumenten.");
+            }
         }
 
 

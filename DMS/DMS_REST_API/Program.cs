@@ -11,13 +11,15 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Minio;
 using Microsoft.Extensions.DependencyInjection;
+using DMS_REST_API.Controllers;
+using log4net;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Logging.ClearProviders();
-builder.Logging.AddConsole();
-builder.Logging.AddDebug();
-builder.Logging.AddFilter("Microsoft.AspNetCore.Routing", LogLevel.Debug);
+//builder.Logging.ClearProviders();
+//builder.Logging.AddConsole();
+//builder.Logging.AddDebug();
+//builder.Logging.AddFilter("Microsoft.AspNetCore.Routing", LogLevel.Debug);
 
 builder.Services.AddControllers();
 
@@ -66,6 +68,8 @@ builder.Services.AddSingleton<IMinioClient>(sp =>
         .Build();
 });
 
+builder.Logging.AddLog4Net("log4net.config");
+
 // RabbitMQPublisher als IRabbitMQPublisher registrieren
 builder.Services.AddSingleton<IRabbitMQPublisher, RabbitMQPublisher>();
 
@@ -95,5 +99,8 @@ app.UseCors("AllowWebUI");
 app.UseAuthorization();
 
 app.MapControllers();
+
+var logger = app.Services.GetRequiredService<ILogger<Program>>();
+logger.LogInformation("Application is starting...");
 
 app.Run();
