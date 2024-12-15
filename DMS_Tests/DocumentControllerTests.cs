@@ -10,6 +10,7 @@ using DMS_REST_API.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Elastic.Clients.Elasticsearch;
 
 namespace DMS_Tests.Controllers
 {
@@ -19,6 +20,7 @@ namespace DMS_Tests.Controllers
         private readonly Mock<IMapper> _mockMapper;
         private readonly Mock<ILogger<DocumentController>> _mockLogger;
         private readonly Mock<IRabbitMQPublisher> _mockPublisher;
+        private readonly Mock<ElasticsearchClient> _mockElastic;
         private readonly DocumentController _controller;
 
         public DocumentControllerTests()
@@ -27,8 +29,10 @@ namespace DMS_Tests.Controllers
             _mockMapper = new Mock<IMapper>();
             _mockLogger = new Mock<ILogger<DocumentController>>();
             _mockPublisher = new Mock<IRabbitMQPublisher>();
+            _mockElastic = new Mock<ElasticsearchClient>();
 
             _controller = new DocumentController(
+                _mockElastic.Object,
                 _mockRepo.Object,
                 _mockMapper.Object,
                 _mockLogger.Object,
@@ -85,7 +89,26 @@ namespace DMS_Tests.Controllers
             Assert.Equal(testId, returnDocument.Id);
         }
 
-        
+        [Fact]
+        public async Task GetById_ReturnsFalse()
+        {
+
+            int testId = 1;
+            var document = new Document { Id = testId, Title = "Doc1", FileType = "pdf" };
+            var dtoDocument = new DocumentDto { Id = testId, Title = "Doc1", FileType = "pdf" };
+
+            _mockRepo.Setup(repo => repo.GetDocumentAsync(testId)).ReturnsAsync(document);
+            _mockMapper.Setup(m => m.Map<DocumentDto>(document)).Returns(dtoDocument);
+
+
+            var result = await _controller.GetById(testId + 1);
+
+
+           var Result = Assert.IsType<NotFoundObjectResult>(result);
+
+        }
+
+
 
         #endregion
 
@@ -125,12 +148,22 @@ namespace DMS_Tests.Controllers
             var dtoItem = new DocumentDto { Title = "", FileType = "pdf" };
             _controller.ModelState.AddModelError("Title", "The Document name cannot be empty.");
 
-            
             var result = await _controller.Create(dtoItem);
 
             
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
-            Assert.False(_controller.ModelState.IsValid);
+
+        }
+
+        [Fact]
+        public async Task Create_ReturnsBadRequest_WhenModelIsNull()
+        {
+
+  
+            var result = await _controller.Create(null);
+
+
+            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
         }
 
         #endregion
@@ -142,29 +175,112 @@ namespace DMS_Tests.Controllers
         {
            
             int testId = 1;
-            var dtoItem = new DocumentDto { Id = testId, Title = "Updated Doc", FileType = "docx" };
             var existingDocument = new Document { Id = testId, Title = "Old Doc", FileType = "pdf" };
+            var dtoUpdateItem = new DocumentUpdateDto { Id = testId, Title = "Updated Doc" };
 
             _mockRepo.Setup(repo => repo.GetDocumentAsync(testId)).ReturnsAsync(existingDocument);
             _mockRepo.Setup(repo => repo.UpdateDocumentAsync(existingDocument)).Returns(Task.CompletedTask);
 
            
-            var result = await _controller.Update(testId, dtoItem);
+            var result = await _controller.Update(testId, dtoUpdateItem);
 
             
             Assert.IsType<NoContentResult>(result);
-            _mockPublisher.Verify(p => p.PublishDocumentUpdated(dtoItem), Times.Once);
             Assert.Equal("Updated Doc", existingDocument.Title);
-            Assert.Equal("docx", existingDocument.FileType);
+            Assert.Equal("pdf", existingDocument.FileType);
         }
 
-       
+        [Fact]
+        public async Task Update_ReturnsBadRequest_WhenModelIsNull()
+        {
 
-        
+
+            var result = await _controller.Update(1, null);
+
+
+            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+        }
+
+        [Fact]
+        public async Task Update_ReturnsBadRequest_WhenIdsDontMatch()
+        {
+
+            int testId = 1;
+            var dtoUpdateItem = new DocumentUpdateDto { Id = testId +1, Title = "Old Doc" };
+
+
+            var result = await _controller.Update(testId, dtoUpdateItem);
+
+            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+        }
+
+        [Fact]
+        public async Task Update_ReturnsBadRequest_WhenModelStateIsInvalid()
+        {
+            int testId = 1;
+            var existingDocument = new Document { Id = testId, Title = "Old Doc", FileType = "pdf" };
+            var dtoUpdateItem = new DocumentUpdateDto { Id = testId, Title = "" };
+            _controller.ModelState.AddModelError("Title", "The Document name cannot be empty.");
+
+            _mockRepo.Setup(repo => repo.GetDocumentAsync(testId)).ReturnsAsync(existingDocument);
+            _mockRepo.Setup(repo => repo.UpdateDocumentAsync(existingDocument)).Returns(Task.CompletedTask);
+
+
+            var result = await _controller.Update(testId, dtoUpdateItem);
+
+
+            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+        }
+
+        [Fact]
+        public async Task Update_ReturnsNotFound_WhenDocumentDontExist()
+        {
+
+            int testId = 1;
+            var existingDocument = new Document { Id = testId, Title = "Old Doc", FileType = "pdf" };
+            var dtoUpdateItem = new DocumentUpdateDto { Id = testId +1, Title = "Updated Doc" };
+
+            _mockRepo.Setup(repo => repo.GetDocumentAsync(testId)).ReturnsAsync(existingDocument);
+            _mockRepo.Setup(repo => repo.UpdateDocumentAsync(existingDocument)).Returns(Task.CompletedTask);
+
+
+            var result = await _controller.Update(testId + 1, dtoUpdateItem);
+
+
+            var Result = Assert.IsType<NotFoundObjectResult>(result);
+        }
+
 
         #endregion
 
-        
 
+
+        #region Delete Tests
+        [Fact]
+        public async Task Delete_ReturnsNoContent_WhenDeleteIsSuccessful()
+        {
+            int testId = 1;
+            var existingDocument = new Document { Id = testId, Title = "Old Doc", FileType = "pdf" };
+
+            _mockRepo.Setup(repo => repo.GetDocumentAsync(testId)).ReturnsAsync(existingDocument);
+            _mockRepo.Setup(repo => repo.DeleteDocumentAsync(testId)).Returns(Task.CompletedTask);
+
+            var result = await _controller.Delete(testId);
+            Assert.IsType<NoContentResult>(result);
+
+        }
+
+        [Fact]
+        public async Task Delete_ReturnsNotFound_WhenIdDoesntExist()
+        {
+            int testId = 1;
+            
+
+            var result = await _controller.Delete(testId);
+            Assert.IsType<NotFoundObjectResult>(result);
+
+        }
+
+        #endregion
     }
 }

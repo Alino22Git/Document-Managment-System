@@ -204,14 +204,8 @@ namespace DMS_REST_API.Controllers
                 }
 
                 // Rückgabe der Dokumentdetails ohne Content (wird später vom Listener-Service aktualisiert)
-                return CreatedAtAction(nameof(GetById), new { id = document.Id }, new 
-                { 
-                    document.Id, 
-                    document.Title, 
-                    document.FileType, 
-                    document.FileName,
-                    Content = "OCR wird verarbeitet..."
-                });
+                var returnItem = _mapper.Map<DocumentDto>(document);
+                return CreatedAtAction(nameof(GetById), new { id = document.Id }, returnItem);
             }
             catch (Minio.Exceptions.MinioException ex)
             {
@@ -271,14 +265,9 @@ namespace DMS_REST_API.Controllers
                 }
 
                 // Rückgabe der Dokumentdetails ohne Content (wird später vom Listener-Service aktualisiert)
-                return CreatedAtAction(nameof(GetById), new { id = document.Id }, new 
-                { 
-                    document.Id, 
-                    document.Title, 
-                    document.FileType, 
-                    document.FileName,
-                    Content = "OCR wird verarbeitet..."
-                });
+                var returnItem = _mapper.Map<DocumentDto>(document);
+                returnItem.Content = "OCR wird verarbeitet...";
+                return CreatedAtAction(nameof(GetById), new { id = document.Id }, returnItem);
             }
             catch (Exception ex)
             {
